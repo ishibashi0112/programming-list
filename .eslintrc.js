@@ -19,5 +19,6 @@ module.exports = {
   plugins: ["react"],
   rules: {
     "react/prop-types": "off",
+    "jsx-a11y/no-autofocus": "off",
   },
 };
