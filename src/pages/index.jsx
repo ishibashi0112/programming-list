@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <div>
       <Header />
-      <div>
+      <div className="flex">
         <Folder />
         <NewForm />
       </div>
