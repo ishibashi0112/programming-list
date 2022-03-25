@@ -20,5 +20,6 @@ module.exports = {
   rules: {
     "react/prop-types": "off",
     "jsx-a11y/no-autofocus": "off",
+    "jsx-a11y/anchor-is-valid": "off",
   },
 };
