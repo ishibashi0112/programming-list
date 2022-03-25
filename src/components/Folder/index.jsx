@@ -1,30 +1,14 @@
 import { Accordion, Button, Loader, TextInput } from "@mantine/core";
 import { formList, useForm } from "@mantine/form";
+import Link from "next/link";
 import React from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useFolders } from "src/hooks/useFolders";
-import { usePosts } from "src/hooks/usePosts";
 import { useSWRConfig } from "swr";
 
 export const Folder = () => {
   const { mutate } = useSWRConfig();
-  const {
-    data: folders,
-    error: foldersError,
-    isLoading: foldersLoading,
-  } = useFolders();
-
-  const {
-    data: posts,
-    error: postsError,
-    isLoading: postsLoading,
-  } = usePosts();
-
-  const folderByPostsCount = (folderId) => {
-    const filterposts = posts.filter((post) => post.folder_id === folderId);
-    const postsCount = filterposts.length;
-    return postsCount ? postsCount : null;
-  };
+  const { data: folders, error, isLoading } = useFolders();
 
   const createFolder = async (value) => {
     const folderName = { name: value };
@@ -38,7 +22,7 @@ export const Folder = () => {
     const res = await fetch("/api/createFolder", params);
     const json = await res.json();
     console.log(json);
-    mutate("/api/findAllFolder");
+    mutate("/api/folders/findAllFolder");
   };
 
   const form = useForm({
@@ -67,14 +51,15 @@ export const Folder = () => {
     }
   };
 
-  if (foldersLoading || postsLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-[calc(100vh-48px)] w-1/5 border-r border-black flex justify-center items-center">
         <Loader size="sm" />
       </div>
     );
   }
-  if (foldersError || postsError) {
+
+  if (error) {
     return <div>{error.message}</div>;
   }
 
@@ -87,11 +72,15 @@ export const Folder = () => {
           <ul>
             {folders.map((folder) => (
               <li
-                className="flex justify-between px-2 transition hover:transition hover:bg-gray-100"
+                className=" transition hover:transition hover:bg-gray-100"
                 key={folder.id}
               >
-                <p>{folder.name}</p>
-                <p>{folderByPostsCount(folder.id)}</p>
+                <Link href={`/posts/${folder.id}`}>
+                  <a className="flex justify-between px-2">
+                    <p>{folder.name}</p>
+                    <p>{folder.posts.length ? folder.posts.length : null}</p>
+                  </a>
+                </Link>
               </li>
             ))}
           </ul>
