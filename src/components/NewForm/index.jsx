@@ -1,8 +1,11 @@
 import { TextInput, MultiSelect, Select, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React, { useState } from "react";
+import React from "react";
 import { BsHash } from "react-icons/bs";
 import { useFolders } from "src/hooks/useFolders";
+import { useTags } from "src/hooks/useTags";
+import { urlValidate } from "src/utils/varidate";
+import { mutate } from "swr";
 
 const createPost = async (value) => {
   const params = {
@@ -19,47 +22,39 @@ const createPost = async (value) => {
   return json;
 };
 
-const createTag = async (value, post_id) => {
-  const data = { tags: value.tags, post_id };
-  const params = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  };
-
-  const res = await fetch("/api/createTag", params);
-  const json = await res.json();
-  console.log(json);
-};
-
 export const NewForm = () => {
   const { data: folders } = useFolders();
-  const folderData = folders
+  const { data: tags } = useTags();
+
+  const form = useForm({
+    initialValues: { folder_id: "", url: "", name: "", tags: [] },
+    validate: {
+      url: (value) => (urlValidate(value) ? "URLを入力してください" : null),
+    },
+  });
+
+  const foldersSerectData = folders
     ? folders.map((folder) => ({ value: folder.id, label: folder.name }))
     : [];
-  const [tagData, setTagData] = useState(["React", "Angular", "Svelte", "Vue"]);
 
-  const form = useForm({ initialValues: {} });
+  const tagsSerectData = tags ? tags.map((tag) => tag.name) : [];
 
   const newTag = (query) => {
     return `+ New Tag ${query}`;
   };
 
   const handleOnCreate = (query) => {
-    setTagData((current) => [...current, query]);
+    setTagsSelectData((prev) => [...prev, query]);
   };
 
   const handleSubmit = async (values) => {
     console.log(values);
-    const { tags, ...postValue } = values;
-    const { folder_id, url, name, ...tagsValue } = values;
-
-    const res = await createPost(postValue);
-    await createTag(tagsValue, res.id);
-    console.log("kokomade");
+    await createPost(values);
+    form.validate();
+    form.errors;
     form.reset();
+    mutate("/api/folders/findAllFolder");
+    mutate("/api/findAllTag");
   };
 
   return (
@@ -69,16 +64,20 @@ export const NewForm = () => {
         onSubmit={form.onSubmit(handleSubmit)}
       >
         <Select
+          allowDeselect
           label="FOLDER"
           placeholder="folder"
-          data={folderData}
+          data={foldersSerectData}
+          required
           searchable
+          clearable
           nothingFound="No Folder"
           {...form.getInputProps("folder_id")}
         />
         <TextInput
           placeholder="url"
           label="URL"
+          clearable
           required
           {...form.getInputProps("url")}
         />
@@ -89,13 +88,12 @@ export const NewForm = () => {
           {...form.getInputProps("name")}
         />
         <MultiSelect
-          data={tagData}
+          data={tagsSerectData}
           label="TAG"
           placeholder="tag"
           icon={<BsHash />}
           searchable
           nothingFound="Nothing found"
-          creatable
           getCreateLabel={newTag}
           onCreate={handleOnCreate}
           {...form.getInputProps("tags")}

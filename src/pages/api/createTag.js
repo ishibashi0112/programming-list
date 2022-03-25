@@ -4,6 +4,7 @@ export default async (req, res) => {
   console.log(req.body);
   const tags = req.body.tags;
   const post_id = req.body.post_id;
+
   tags.map(async (tag) => {
     await prisma.tag.create({
       data: {
@@ -13,5 +14,5 @@ export default async (req, res) => {
     });
   });
 
-  res.status(200);
+  res.status(200).end();
 };
