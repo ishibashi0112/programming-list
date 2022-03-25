@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `Post` MODIFY `name` VARCHAR(191) NULL,
+    MODIFY `url` VARCHAR(191) NULL;
