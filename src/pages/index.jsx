@@ -1,16 +1,10 @@
 import React from "react";
-import { Folder } from "src/components/Folder";
-import { Header } from "src/components/Header";
 import { NewForm } from "src/components/NewForm";
 
 const Home = () => {
   return (
-    <div>
-      <Header />
-      <div className="flex">
-        <Folder />
-        <NewForm />
-      </div>
+    <div className="w-4/5">
+      <NewForm />
     </div>
   );
 };

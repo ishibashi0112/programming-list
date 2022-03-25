@@ -58,50 +58,47 @@ export const NewForm = () => {
   };
 
   return (
-    <div className="w-4/5">
-      <form
-        className="w-2/3 mx-auto mt-10 flex flex-col gap-3"
-        onSubmit={form.onSubmit(handleSubmit)}
-      >
-        <Select
-          allowDeselect
-          label="FOLDER"
-          placeholder="folder"
-          data={foldersSerectData}
-          required
-          searchable
-          clearable
-          nothingFound="No Folder"
-          {...form.getInputProps("folder_id")}
-        />
-        <TextInput
-          placeholder="url"
-          label="URL"
-          clearable
-          required
-          {...form.getInputProps("url")}
-        />
-        <TextInput
-          placeholder="name"
-          label="NAME"
-          required
-          {...form.getInputProps("name")}
-        />
-        <MultiSelect
-          data={tagsSerectData}
-          label="TAG"
-          placeholder="tag"
-          icon={<BsHash />}
-          searchable
-          nothingFound="Nothing found"
-          getCreateLabel={newTag}
-          onCreate={handleOnCreate}
-          {...form.getInputProps("tags")}
-        />
-        <Button className="bg-gray-500" type="submit">
-          Submit
-        </Button>
-      </form>
-    </div>
+    <form
+      className="w-2/3 mx-auto mt-10 flex flex-col gap-3"
+      onSubmit={form.onSubmit(handleSubmit)}
+    >
+      <Select
+        allowDeselect
+        label="FOLDER"
+        placeholder="folder"
+        data={foldersSerectData}
+        required
+        searchable
+        clearable
+        nothingFound="No Folder"
+        {...form.getInputProps("folder_id")}
+      />
+      <TextInput
+        placeholder="url"
+        label="URL"
+        required
+        {...form.getInputProps("url")}
+      />
+      <TextInput
+        placeholder="name"
+        label="NAME"
+        required
+        {...form.getInputProps("name")}
+      />
+      <MultiSelect
+        data={tagsSerectData}
+        label="TAG"
+        placeholder="tag"
+        icon={<BsHash />}
+        searchable
+        nothingFound="Nothing found"
+        getCreateLabel={newTag}
+        onCreate={handleOnCreate}
+        {...form.getInputProps("tags")}
+      />
+      <Button className="bg-gray-500" type="submit">
+        Submit
+      </Button>
+    </form>
   );
 };
