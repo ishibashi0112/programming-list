@@ -3,6 +3,7 @@ import { formList, useForm } from "@mantine/form";
 import Link from "next/link";
 import React from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+import { BsPencilSquare } from "react-icons/bs";
 import { useFolders } from "src/hooks/useFolders";
 import { useSWRConfig } from "swr";
 
@@ -72,15 +73,28 @@ export const Folder = () => {
           <ul>
             {folders.map((folder) => (
               <li
-                className=" transition hover:transition hover:bg-gray-100"
+                className="group flex justify-between px-2 transition hover:transition hover:bg-gray-100"
                 key={folder.id}
               >
                 <Link href={`/posts/${folder.id}`}>
-                  <a className="flex justify-between px-2">
+                  <a className="flex-1">
                     <p>{folder.name}</p>
-                    <p>{folder.posts.length ? folder.posts.length : null}</p>
                   </a>
                 </Link>
+
+                <div className="flex justify-between items-center">
+                  <Link
+                    href={{
+                      pathname: "/",
+                      query: { folderId: folder.id, folderName: folder.name },
+                    }}
+                  >
+                    <a className=" hidden rounded-full mr-1 text-md transition-all hover:text-blue-400  hover:transition-all group-hover:block">
+                      <AiOutlinePlusCircle />
+                    </a>
+                  </Link>
+                  <p>{folder.posts.length ? folder.posts.length : null}</p>
+                </div>
               </li>
             ))}
           </ul>

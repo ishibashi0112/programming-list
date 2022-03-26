@@ -1,6 +1,7 @@
 import { TextInput, MultiSelect, Select, Button } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import { BsHash } from "react-icons/bs";
 import { useFolders } from "src/hooks/useFolders";
 import { useTags } from "src/hooks/useTags";
@@ -23,21 +24,25 @@ const createPost = async (value) => {
 };
 
 export const NewForm = () => {
+  const router = useRouter();
   const { data: folders } = useFolders();
   const { data: tags } = useTags();
-
-  const form = useForm({
-    initialValues: { folder_id: "", url: "", name: "", tags: [] },
-    validate: {
-      url: (value) => (urlValidate(value) ? "URLを入力してください" : null),
-    },
-  });
-
+  const [tagsSelectData, setTagsSelectData] = useState([]);
   const foldersSerectData = folders
     ? folders.map((folder) => ({ value: folder.id, label: folder.name }))
     : [];
 
-  const tagsSerectData = tags ? tags.map((tag) => tag.name) : [];
+  const form = useForm({
+    initialValues: {
+      folder_id: "",
+      url: "",
+      name: "",
+      tags: [],
+    },
+    validate: {
+      url: (value) => (urlValidate(value) ? "URLを入力してください" : null),
+    },
+  });
 
   const newTag = (query) => {
     return `+ New Tag ${query}`;
@@ -57,16 +62,28 @@ export const NewForm = () => {
     mutate("/api/findAllTag");
   };
 
+  useEffect(() => {
+    form.setFieldValue("folder_id", Number(router.query.folderId));
+  }, [router.query.folderId]);
+
+  useEffect(() => {
+    const tagsNameArray = tags ? tags.map((tag) => tag.name) : [];
+    setTagsSelectData(tagsNameArray);
+    console.log(123);
+  }, [tags]);
+
   return (
     <form
       className="w-2/3 mx-auto mt-10 flex flex-col gap-3"
       onSubmit={form.onSubmit(handleSubmit)}
     >
       <Select
-        allowDeselect
         label="FOLDER"
-        placeholder="folder"
+        placeholder={
+          router.query.folderName ? router.query.folderName : "folder"
+        }
         data={foldersSerectData}
+        disabled={router.query.folderId ? true : false}
         required
         searchable
         clearable
@@ -86,11 +103,13 @@ export const NewForm = () => {
         {...form.getInputProps("name")}
       />
       <MultiSelect
-        data={tagsSerectData}
+        data={tagsSelectData}
         label="TAG"
         placeholder="tag"
         icon={<BsHash />}
         searchable
+        creatable
+        clearable
         nothingFound="Nothing found"
         getCreateLabel={newTag}
         onCreate={handleOnCreate}
