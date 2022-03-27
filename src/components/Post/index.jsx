@@ -3,6 +3,7 @@ import Link from "next/link";
 import React from "react";
 import { usePostsByFolderId } from "src/hooks/usePostsByFolderId";
 import { BsHash } from "react-icons/bs";
+import { TagLink } from "../Tag/TagLink";
 
 export const Post = () => {
   const { data: posts, error, isLoading, isEmpty } = usePostsByFolderId();
@@ -42,17 +43,7 @@ export const Post = () => {
               </p>
               <ul className="flex gap-2">
                 {post.tags.map((tag) => (
-                  <li
-                    className="bg-gray-500 text-white px-1 py-[0.1rem] rounded-xl text-sm"
-                    key={tag.id}
-                  >
-                    <div className="flex">
-                      <p className="flex items-center">
-                        <BsHash />
-                      </p>
-                      <p className="pr-1">{tag.name}</p>
-                    </div>
-                  </li>
+                  <TagLink key={tag.id} tagId={tag.id} tagName={tag.name} />
                 ))}
               </ul>
             </a>
