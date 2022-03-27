@@ -69,7 +69,6 @@ export const NewForm = () => {
   useEffect(() => {
     const tagsNameArray = tags ? tags.map((tag) => tag.name) : [];
     setTagsSelectData(tagsNameArray);
-    console.log(123);
   }, [tags]);
 
   return (
