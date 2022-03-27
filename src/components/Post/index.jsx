@@ -27,7 +27,7 @@ export const Post = () => {
     <ul className="flex flex-wrap gap-4  p-4 ">
       {posts.map((post) => (
         <li
-          className="w-96 h-64 border rounded-md shadow transition hover:transition hover:opacity-80"
+          className="w-96 h-64 border rounded-md shadow transition hover:transition hover:opacity-80 "
           key={post.id}
         >
           <Link href={post.url}>
