@@ -1,9 +1,8 @@
-import { Accordion, Button, Loader, TextInput } from "@mantine/core";
+import { Accordion, Button, Loader, TextInput, Tooltip } from "@mantine/core";
 import { formList, useForm } from "@mantine/form";
 import Link from "next/link";
 import React from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
-import { BsPencilSquare } from "react-icons/bs";
 import { useFolders } from "src/hooks/useFolders";
 import { useSWRConfig } from "swr";
 
@@ -89,8 +88,14 @@ export const Folder = () => {
                       query: { folderId: folder.id, folderName: folder.name },
                     }}
                   >
-                    <a className=" hidden rounded-full mr-1 text-md transition-all hover:text-blue-400  hover:transition-all group-hover:block">
-                      <AiOutlinePlusCircle />
+                    <a className="hidden mr-1 transition-all hover:transition-all group-hover:block">
+                      <Tooltip
+                        label={`${folder.name}に保存する`}
+                        openDelay={500}
+                        className="flex items-center"
+                      >
+                        <AiOutlinePlusCircle className="text-lg rounded-full  transition-all  hover:text-blue-400 hover:ring-4 hover:ring-gray-300  hover:transition-all" />
+                      </Tooltip>
                     </a>
                   </Link>
                   <p>{folder.posts.length ? folder.posts.length : null}</p>
@@ -117,7 +122,7 @@ export const Folder = () => {
               disabled={form.values.folder.length ? true : false}
             >
               <AiOutlinePlusCircle />
-              <p className="ml-1">新規フォルダ</p>
+              <p className="ml-1">New Folder</p>
             </Button>
           </div>
         </Accordion.Item>
