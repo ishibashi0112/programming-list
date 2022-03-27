@@ -9,7 +9,6 @@ export default async (req, res) => {
         { tags: { some: { name: { contains: keyword } } } },
       ],
     },
-    // where:{},
     include: { tags: true },
   });
   console.log(posts);
