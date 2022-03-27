@@ -5,11 +5,26 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { SearchResults } from "src/components/Search/SearchResults";
 
 export const Search = () => {
+  const [isShow, setIsShow] = useState(true);
   const [value, setValue] = useState("");
   const [debouncedValue] = useDebouncedValue(value, 500, { leading: false });
 
   const handleOnChange = async (e) => {
     setValue(e.currentTarget.value);
+  };
+
+  const handleOnBlur = () => {
+    setIsShow(false);
+  };
+
+  const hanndleOnfocus = () => {
+    if (!isShow) {
+      setIsShow(true);
+    }
+  };
+
+  const handleDelete = () => {
+    setValue("");
   };
 
   return (
@@ -19,9 +34,12 @@ export const Search = () => {
         icon={<BiSearch />}
         value={value}
         size={"xs"}
+        rightSection={value ? <button onClick={handleDelete}>×</button> : null}
         onChange={handleOnChange}
+        onBlur={handleOnBlur}
+        onFocus={hanndleOnfocus}
       />
-      <div className="absolute ">
+      <div className={isShow ? "absolute " : "hidden absolute "}>
         {debouncedValue ? <SearchResults value={debouncedValue} /> : null}
       </div>
     </div>

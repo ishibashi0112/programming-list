@@ -1,6 +1,7 @@
 import { Highlight, Loader } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
+import { BsHash } from "react-icons/bs";
 import { useSearchPost } from "src/hooks/useSearchPost";
 
 export const SearchResults = (props) => {
@@ -44,6 +45,29 @@ export const SearchResults = (props) => {
                 <p className="text-gray-500 text-sm truncate">{post.url}</p>
               </a>
             </Link>
+            <ul className="flex gap-2">
+              {post.tags.map((tag) => (
+                <li
+                  className="bg-gray-500 text-white px-[0.3rem] py-[0.1rem] rounded-xl text-xs"
+                  key={tag.id}
+                >
+                  <div className="flex">
+                    <p className="flex items-center">
+                      <BsHash />
+                    </p>
+                    <p>
+                      <Highlight
+                        className="text-xs "
+                        highlight={props.value}
+                        highlightColor="dark"
+                      >
+                        {tag.name}
+                      </Highlight>
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </li>
         ))}
       </ul>

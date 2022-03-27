@@ -4,7 +4,10 @@ export default async (req, res) => {
   const keyword = req.query.keyword;
   const posts = await prisma.post.findMany({
     where: {
-      name: { contains: keyword },
+      OR: [
+        { name: { contains: keyword } },
+        { tags: { some: { name: { contains: keyword } } } },
+      ],
     },
     // where:{},
     include: { tags: true },
