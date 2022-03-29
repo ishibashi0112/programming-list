@@ -1,5 +1,5 @@
 import React from "react";
-import { Post as PostComponent } from "src/components/Post";
+import { Posts as PostComponent } from "src/components/Posts";
 
 const Post = () => {
   return (
