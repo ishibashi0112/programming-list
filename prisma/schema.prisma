@@ -11,11 +11,14 @@ datasource db {
   referentialIntegrity = "prisma"
 }
 
-// model User {
-//   id              Int              @id @default(autoincrement())
-//   email           String           @unique
-//   Recommendations Recommendation[]
-// }
+model User {
+  id      Int      @id @default(autoincrement())
+  email   String   @unique
+  folders Folder[]
+  posts   Post[]
+  tags    Tag[]
+  memos   Memo[]
+}
 
 model Folder {
   id        Int      @id @default(autoincrement())
@@ -23,6 +26,16 @@ model Folder {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   posts     Post[]
+  user_id   Int
+  user      User     @relation(fields: [user_id], references: [id])
+
+}
+
+model Memo {
+  id      Int    @id @default(autoincrement())
+  body    String
+  user_id Int
+  user    User   @relation(fields: [user_id], references: [id])
 
 }
 
@@ -33,7 +46,10 @@ model Post {
   createdAt DateTime @default(now())
   tags      Tag[]    @relation("_PostsOnTags")
   folder_id Int
-  folders   Folder   @relation(fields: [folder_id], references: [id])
+  folder    Folder   @relation(fields: [folder_id], references: [id])
+  user_id   Int
+  user      User     @relation(fields: [user_id], references: [id])
+
 }
 
 model Tag {
@@ -41,6 +57,9 @@ model Tag {
   name      String   @unique
   createdAt DateTime @default(now())
   posts     Post[]   @relation("_PostsOnTags")
+  user_id   Int
+  user      User     @relation(fields: [user_id], references: [id])
+
 
 }
 
