@@ -1,12 +1,14 @@
 import { Accordion, Button, Loader, TextInput, Tooltip } from "@mantine/core";
 import { formList, useForm } from "@mantine/form";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useFolders } from "src/hooks/useFolders";
 import { useSWRConfig } from "swr";
 
 export const Folder = () => {
+  const router = useRouter();
   const { mutate } = useSWRConfig();
   const { data: folders, error, isLoading } = useFolders();
 
@@ -65,17 +67,26 @@ export const Folder = () => {
 
   return (
     <div className="min-h-[calc(100vh-48px)] w-1/5 border-r border-black">
-      <Accordion iconSize={18} multiple>
+      <Accordion iconSize={18} multiple initialItem={1}>
         <Accordion.Item label="Memo"></Accordion.Item>
 
         <Accordion.Item label="URL">
           <ul>
             {folders.map((folder) => (
               <li
-                className="group flex justify-between px-2 transition hover:transition hover:bg-gray-100"
+                className={`${
+                  router.query?.folderName === folder.name
+                    ? "bg-gray-200"
+                    : "hover:bg-gray-100"
+                } group flex justify-between px-2 rounded-sm transition hover:transition `}
                 key={folder.id}
               >
-                <Link href={`/posts/${folder.id}`}>
+                <Link
+                  href={{
+                    pathname: `/posts/${folder.id}`,
+                    query: { folderName: folder.name },
+                  }}
+                >
                   <a className="flex-1">
                     <p>{folder.name}</p>
                   </a>
