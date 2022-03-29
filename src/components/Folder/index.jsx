@@ -3,7 +3,11 @@ import { formList, useForm } from "@mantine/form";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { AiOutlinePlusCircle } from "react-icons/ai";
+import {
+  AiOutlineFileAdd,
+  AiOutlineFolderAdd,
+  AiOutlinePlusCircle,
+} from "react-icons/ai";
 import { useFolders } from "src/hooks/useFolders";
 import { useSWRConfig } from "swr";
 
@@ -11,6 +15,10 @@ export const Folder = () => {
   const router = useRouter();
   const { mutate } = useSWRConfig();
   const { data: folders, error, isLoading } = useFolders();
+
+  const form = useForm({
+    initialValues: { folder: formList([]) },
+  });
 
   const createFolder = async (value) => {
     const folderName = { name: value };
@@ -26,10 +34,6 @@ export const Folder = () => {
     console.log(json);
     mutate("/api/folders/findAllFolder");
   };
-
-  const form = useForm({
-    initialValues: { folder: formList([]) },
-  });
 
   const handleClickNewFolder = () => {
     form.addListItem("folder", { name: "" });
@@ -53,6 +57,8 @@ export const Folder = () => {
     }
   };
 
+  const handleClickNewMemo = () => {};
+
   if (isLoading) {
     return (
       <div className="min-h-[calc(100vh-48px)] w-1/5 border-r border-black flex justify-center items-center">
@@ -68,7 +74,20 @@ export const Folder = () => {
   return (
     <div className="min-h-[calc(100vh-48px)] w-1/5 border-r border-black">
       <Accordion iconSize={18} multiple initialItem={1}>
-        <Accordion.Item label="Memo"></Accordion.Item>
+        <Accordion.Item label="Memo">
+          <div>
+            <Button
+              className="p-0"
+              compact
+              variant="subtle"
+              onClick={handleClickNewMemo}
+              disabled={form.values.folder.length ? true : false}
+            >
+              <AiOutlineFileAdd className="text-lg" />
+              <p className="ml-1">New Memo</p>
+            </Button>
+          </div>
+        </Accordion.Item>
 
         <Accordion.Item label="URL">
           <ul>
@@ -132,7 +151,7 @@ export const Folder = () => {
               onClick={handleClickNewFolder}
               disabled={form.values.folder.length ? true : false}
             >
-              <AiOutlinePlusCircle />
+              <AiOutlineFolderAdd className="text-xl" />
               <p className="ml-1">New Folder</p>
             </Button>
           </div>

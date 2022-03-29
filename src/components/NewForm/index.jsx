@@ -1,4 +1,4 @@
-import { TextInput, MultiSelect, Select, Button } from "@mantine/core";
+import { TextInput, MultiSelect, Select, Button, Tabs } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { useFolders } from "src/hooks/useFolders";
 import { useTags } from "src/hooks/useTags";
 import { urlValidate } from "src/utils/varidate";
 import { mutate } from "swr";
+import { MemoForm } from "src/components/NewForm/MemoForm";
 
 const createPost = async (value) => {
   const params = {
@@ -72,51 +73,60 @@ export const NewForm = () => {
   }, [tags]);
 
   return (
-    <form
-      className="w-2/3 mx-auto mt-10 flex flex-col gap-3"
-      onSubmit={form.onSubmit(handleSubmit)}
-    >
-      <Select
-        label="FOLDER"
-        placeholder={
-          router.query.folderName ? router.query.folderName : "folder"
-        }
-        data={foldersSerectData}
-        disabled={router.query.folderId ? true : false}
-        required
-        searchable
-        clearable
-        nothingFound="No Folder"
-        {...form.getInputProps("folder_id")}
-      />
-      <TextInput
-        placeholder="url"
-        label="URL"
-        required
-        {...form.getInputProps("url")}
-      />
-      <TextInput
-        placeholder="name"
-        label="NAME"
-        required
-        {...form.getInputProps("name")}
-      />
-      <MultiSelect
-        data={tagsSelectData}
-        label="TAG"
-        placeholder="tag"
-        icon={<BsHash />}
-        searchable
-        creatable
-        clearable
-        nothingFound="Nothing found"
-        getCreateLabel={newTag}
-        onCreate={handleOnCreate}
-        {...form.getInputProps("tags")}
-      />
-      <Button className="bg-gray-500" type="submit">
-        Submit
-      </Button>
-    </form>
+    <div className="w-full flex flex-col items-center">
+      <Tabs className="w-3/4 mt-8 " grow position="center" initialTab={0}>
+        <Tabs.Tab className="font-bold" label="Url" tabKey="First">
+          <form
+            className="w-3/4 mx-auto mt-8 flex flex-col gap-3"
+            onSubmit={form.onSubmit(handleSubmit)}
+          >
+            <Select
+              label="FOLDER"
+              placeholder={
+                router.query.folderName ? router.query.folderName : "folder"
+              }
+              data={foldersSerectData}
+              disabled={router.query.folderId ? true : false}
+              required
+              searchable
+              clearable
+              nothingFound="No Folder"
+              {...form.getInputProps("folder_id")}
+            />
+            <TextInput
+              placeholder="url"
+              label="URL"
+              required
+              {...form.getInputProps("url")}
+            />
+            <TextInput
+              placeholder="name"
+              label="NAME"
+              required
+              {...form.getInputProps("name")}
+            />
+            <MultiSelect
+              data={tagsSelectData}
+              label="TAG"
+              placeholder="tag"
+              icon={<BsHash />}
+              searchable
+              creatable
+              clearable
+              nothingFound="Nothing found"
+              getCreateLabel={newTag}
+              onCreate={handleOnCreate}
+              {...form.getInputProps("tags")}
+            />
+            <Button className="bg-gray-500" type="submit">
+              Submit
+            </Button>
+          </form>
+        </Tabs.Tab>
+        <Tabs.Tab className="font-bold" label="Memo" tabKey="Second">
+          <MemoForm />
+        </Tabs.Tab>
+      </Tabs>
+    </div>
   );
 };
