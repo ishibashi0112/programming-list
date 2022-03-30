@@ -11,53 +11,85 @@ datasource db {
   referentialIntegrity = "prisma"
 }
 
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model User {
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  folders Folder[]
-  posts   Post[]
-  tags    Tag[]
-  memos   Memo[]
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  folders       Folder[]
+  posts         Post[]
+  tags          Tag[]
+  memos         Memo[]
 }
 
 model Folder {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   posts     Post[]
-  user_id   Int
+  user_id   String
   user      User     @relation(fields: [user_id], references: [id])
 
 }
 
 model Memo {
-  id      Int    @id @default(autoincrement())
+  id      String @id @default(cuid())
   body    String
-  user_id Int
+  user_id String
   user    User   @relation(fields: [user_id], references: [id])
 
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   name      String
   url       String
   createdAt DateTime @default(now())
   tags      Tag[]    @relation("_PostsOnTags")
-  folder_id Int
+  folder_id String
   folder    Folder   @relation(fields: [folder_id], references: [id])
-  user_id   Int
+  user_id   String
   user      User     @relation(fields: [user_id], references: [id])
 
 }
 
 model Tag {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   name      String   @unique
   createdAt DateTime @default(now())
   posts     Post[]   @relation("_PostsOnTags")
-  user_id   Int
+  user_id   String
   user      User     @relation(fields: [user_id], references: [id])
 
 

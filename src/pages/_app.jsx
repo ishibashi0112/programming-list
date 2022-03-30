@@ -1,16 +1,24 @@
 import Head from "next/head";
 import React from "react";
-import Layout from "src/layout";
+
+import { SessionProvider } from "next-auth/react";
 import "tailwindcss/tailwind.css";
 
-const MyApp = ({ Component, pageProps }) => {
+const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
+  const getLayout = Component.getLayout || ((page) => page);
+
   return (
-    <Layout>
-      <Head>
-        <title>Create Next App</title>
-      </Head>
-      <Component {...pageProps} />
-    </Layout>
+    <SessionProvider session={session}>
+      {console.log(session)}
+      {getLayout(
+        <>
+          <Head>
+            <title>Create Next App</title>
+          </Head>
+          <Component {...pageProps} />
+        </>
+      )}
+    </SessionProvider>
   );
 };
 
