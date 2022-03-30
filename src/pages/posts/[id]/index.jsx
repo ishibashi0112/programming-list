@@ -1,5 +1,6 @@
 import React from "react";
 import { Posts as PostComponent } from "src/components/Posts";
+import Layout from "src/layout";
 
 const Post = () => {
   return (
@@ -10,3 +11,7 @@ const Post = () => {
 };
 
 export default Post;
+
+Post.getLayout = (page) => {
+  return <Layout>{page}</Layout>;
+};

@@ -1,5 +1,6 @@
 import React from "react";
 import { NewForm } from "src/components/NewForm";
+import Layout from "src/layout";
 
 const Home = () => {
   return (
@@ -10,3 +11,7 @@ const Home = () => {
 };
 
 export default Home;
+
+Home.getLayout = (page) => {
+  return <Layout>{page}</Layout>;
+};

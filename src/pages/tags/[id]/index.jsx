@@ -1,5 +1,6 @@
 import React from "react";
 import { Tag as TagComponent } from "src/components/Tag";
+import Layout from "src/layout";
 
 const Tag = () => {
   return (
@@ -10,3 +11,7 @@ const Tag = () => {
 };
 
 export default Tag;
+
+Tag.getLayout = (page) => {
+  return <Layout>{page}</Layout>;
+};
