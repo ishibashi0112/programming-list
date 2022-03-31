@@ -20,6 +20,7 @@ export default async (req, res) => {
       const tagId = req.query.tag_id;
       const postsbyTagId = await prisma.post.findMany({
         where: {
+          user_id: session.userId,
           tags: { some: { id: { equals: tagId } } },
         },
         include: { tags: true },
