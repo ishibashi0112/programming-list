@@ -18,7 +18,7 @@ export const Folder = () => {
   const { data: folders, error, isLoading } = useFolders();
   const { data: memos } = useMemos();
 
-  console.log(memos);
+  console.log(router.query.id);
 
   const form = useForm({
     initialValues: { folder: formList([]) },
@@ -83,7 +83,7 @@ export const Folder = () => {
             {folders.map((folder) => (
               <li
                 className={`${
-                  router.query?.folderName === folder.name
+                  router.query?.id === folder.id
                     ? "bg-gray-200"
                     : "hover:bg-gray-100"
                 } group flex justify-between px-2 rounded-sm transition hover:transition `}
@@ -152,7 +152,11 @@ export const Folder = () => {
               {memos
                 ? memos.map((memo) => (
                     <li
-                      className="p-1 rounded-sm transition hover:bg-gray-100 hover:transition"
+                      className={`${
+                        router.query?.id === memo.id
+                          ? "bg-gray-200"
+                          : "hover:bg-gray-100"
+                      } p-1 rounded-sm transition  hover:transition`}
                       key={memo.id}
                     >
                       <Link href={`/memos/${memo.id}`}>
