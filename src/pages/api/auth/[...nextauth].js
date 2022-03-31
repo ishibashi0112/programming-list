@@ -20,6 +20,10 @@ export default NextAuth({
     signIn: "/auth/signin",
   },
   callbacks: {
+    session({ session, user }) {
+      session.userId = user.id;
+      return session;
+    },
     redirect({ url, baseUrl }) {
       if (url.startsWith(baseUrl)) return url;
       else if (url.startsWith("/")) return new URL(url, baseUrl).toString();

@@ -29,7 +29,7 @@ export const Folder = () => {
       },
       body: JSON.stringify(folderName),
     };
-    const res = await fetch("/api/createFolder", params);
+    const res = await fetch("/api/folders/createFolder", params);
     const json = await res.json();
     console.log(json);
     mutate("/api/folders/findAllFolder");

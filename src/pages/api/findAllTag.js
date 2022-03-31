@@ -1,9 +1,16 @@
+import { getSession } from "next-auth/react";
 import { prisma } from "src/utils/prismaClient";
 
 export default async (req, res) => {
-  const Tags = await prisma.tag.findMany();
+  const session = await getSession({ req });
 
-  if (Tags) {
-    res.status(200).json(Tags);
+  if (session) {
+    const Tags = await prisma.tag.findMany({
+      where: { user_id: session.userId },
+    });
+
+    res.json(Tags);
+  } else {
+    res.status(401);
   }
 };

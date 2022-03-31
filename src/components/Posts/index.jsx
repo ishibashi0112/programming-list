@@ -4,6 +4,7 @@ import { usePostsByFolderId } from "src/hooks/usePostsByFolderId";
 import { AiOutlineFolder } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { PostsLink } from "src/components/Posts/PostsLink";
+import { ImFileEmpty } from "react-icons/im";
 
 export const Posts = () => {
   const router = useRouter();
@@ -12,7 +13,7 @@ export const Posts = () => {
 
   if (isLoading) {
     return (
-      <div className="w-4/5 h-[calc(100vh-48px)] flex justify-center items-center">
+      <div className="w-full h-[calc(100vh-48px)] flex justify-center items-center">
         <Loader size="sm" />
       </div>
     );
@@ -22,7 +23,16 @@ export const Posts = () => {
   }
 
   if (isEmpty) {
-    return <div>{"ありません"}</div>;
+    return (
+      <div className="h-[calc(100vh-48px)] flex justify-center items-center opacity-50">
+        <div className="flex text-2xl text-gray-500">
+          <p className="flex items-center mr-1">
+            <ImFileEmpty />
+          </p>
+          <p>No Post</p>
+        </div>
+      </div>
+    );
   }
 
   return (

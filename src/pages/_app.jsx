@@ -9,7 +9,6 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
 
   return (
     <SessionProvider session={session}>
-      {console.log(session)}
       {getLayout(
         <>
           <Head>

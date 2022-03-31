@@ -1,17 +1,23 @@
+import { getSession } from "next-auth/react";
 import { prisma } from "src/utils/prismaClient";
 
 export default async (req, res) => {
-  const folder = await prisma.folder.findMany({
-    include: {
-      posts: {
-        select: {
-          id: true,
+  const session = await getSession({ req });
+
+  if (session) {
+    const folder = await prisma.folder.findMany({
+      where: { user_id: session.userId },
+      include: {
+        posts: {
+          select: {
+            id: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  if (folder) {
-    res.status(200).json(folder);
+    res.json(folder);
+  } else {
+    res.status(401);
   }
 };

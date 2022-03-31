@@ -6,7 +6,7 @@ export const usePostsByFolderId = () => {
   const router = useRouter();
   const folderId = router.query.id;
   const { data, error } = useSWR(
-    folderId ? `/api/findPost?folder_id=${folderId}` : null,
+    folderId ? `/api/posts/findPost?folder_id=${folderId}` : null,
     fetcher
   );
 

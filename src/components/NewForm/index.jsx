@@ -18,7 +18,7 @@ const createPost = async (value) => {
     body: JSON.stringify(value),
   };
 
-  const res = await fetch("/api/createPost", params);
+  const res = await fetch("/api/posts/createPost", params);
   const json = await res.json();
   console.log(json);
   return json;
@@ -64,7 +64,7 @@ export const NewForm = () => {
   };
 
   useEffect(() => {
-    form.setFieldValue("folder_id", Number(router.query.folderId));
+    form.setFieldValue("folder_id", router.query.folderId);
   }, [router.query.folderId]);
 
   useEffect(() => {
