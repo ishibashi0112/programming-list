@@ -9,12 +9,16 @@ import {
   AiOutlinePlusCircle,
 } from "react-icons/ai";
 import { useFolders } from "src/hooks/useFolders";
+import { useMemos } from "src/hooks/useMemos";
 import { useSWRConfig } from "swr";
 
 export const Folder = () => {
   const router = useRouter();
   const { mutate } = useSWRConfig();
   const { data: folders, error, isLoading } = useFolders();
+  const { data: memos } = useMemos();
+
+  console.log(memos);
 
   const form = useForm({
     initialValues: { folder: formList([]) },
@@ -76,6 +80,27 @@ export const Folder = () => {
       <Accordion iconSize={18} multiple initialItem={1}>
         <Accordion.Item label="Memo">
           <div>
+            <ul>
+              {memos
+                ? memos.map((memo) => (
+                    <li
+                      className="p-1 rounded-sm transition hover:bg-gray-100 hover:transition"
+                      key={memo.id}
+                    >
+                      <Link href={`/memos/${memo.id}`}>
+                        <a>
+                          <p className="truncate">
+                            {memo.body.replace(/(<([^>]+)>)/gi, "")}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            2022年3月31日 13:00
+                          </p>
+                        </a>
+                      </Link>
+                    </li>
+                  ))
+                : null}
+            </ul>
             <Button
               className="p-0"
               compact

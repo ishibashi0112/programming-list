@@ -13,7 +13,7 @@ const createMemo = async (value) => {
     body: JSON.stringify(value),
   };
 
-  const res = await fetch("/api/createMemo", params);
+  const res = await fetch("/api/memos/createMemo", params);
   const json = await res.json();
   console.log(json);
   return json;
@@ -26,10 +26,9 @@ export const MemoForm = () => {
 
   const handleSubmit = async (values) => {
     console.log(values);
-    // await createPost(values);
-    // form.validate();
-    // form.errors;
-    // form.reset();
+    await createMemo(values);
+
+    memoForm.reset();
     // mutate("/api/folders/findAllFolder");
     // mutate("/api/findAllTag");
   };
