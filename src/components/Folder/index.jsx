@@ -77,43 +77,7 @@ export const Folder = () => {
 
   return (
     <div className="min-h-[calc(100vh-48px)] w-1/5 border-r border-black">
-      <Accordion iconSize={18} multiple initialItem={1}>
-        <Accordion.Item label="Memo">
-          <div>
-            <ul>
-              {memos
-                ? memos.map((memo) => (
-                    <li
-                      className="p-1 rounded-sm transition hover:bg-gray-100 hover:transition"
-                      key={memo.id}
-                    >
-                      <Link href={`/memos/${memo.id}`}>
-                        <a>
-                          <p className="truncate">
-                            {memo.body.replace(/(<([^>]+)>)/gi, "")}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            2022年3月31日 13:00
-                          </p>
-                        </a>
-                      </Link>
-                    </li>
-                  ))
-                : null}
-            </ul>
-            <Button
-              className="p-0"
-              compact
-              variant="subtle"
-              onClick={handleClickNewMemo}
-              disabled={form.values.folder.length ? true : false}
-            >
-              <AiOutlineFileAdd className="text-lg" />
-              <p className="ml-1">New Memo</p>
-            </Button>
-          </div>
-        </Accordion.Item>
-
+      <Accordion iconSize={18} multiple initialItem={0} iconPosition="right">
         <Accordion.Item label="URL">
           <ul>
             {folders.map((folder) => (
@@ -178,6 +142,42 @@ export const Folder = () => {
             >
               <AiOutlineFolderAdd className="text-xl" />
               <p className="ml-1">New Folder</p>
+            </Button>
+          </div>
+        </Accordion.Item>
+
+        <Accordion.Item label="Memo">
+          <div>
+            <ul>
+              {memos
+                ? memos.map((memo) => (
+                    <li
+                      className="p-1 rounded-sm transition hover:bg-gray-100 hover:transition"
+                      key={memo.id}
+                    >
+                      <Link href={`/memos/${memo.id}`}>
+                        <a>
+                          <p className="truncate">
+                            {memo.body.replace(/(<([^>]+)>)/gi, "")}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            2022年3月31日 13:00
+                          </p>
+                        </a>
+                      </Link>
+                    </li>
+                  ))
+                : null}
+            </ul>
+            <Button
+              className="p-0"
+              compact
+              variant="subtle"
+              onClick={handleClickNewMemo}
+              disabled={form.values.folder.length ? true : false}
+            >
+              <AiOutlineFileAdd className="text-lg" />
+              <p className="ml-1">New Memo</p>
             </Button>
           </div>
         </Accordion.Item>

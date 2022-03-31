@@ -10,14 +10,14 @@ export const SearchResults = (props) => {
 
   if (isLoading) {
     return (
-      <div className=" w-64 h-10 flex justify-center items-center  bg-white  border shadow z-[100]">
+      <div className=" w-96 h-10 flex justify-center items-center  bg-white  border shadow z-[100]">
         <Loader size="sm" />
       </div>
     );
   }
   if (error) {
     return (
-      <div className="z-[100] w-64 bg-white  border shadow">
+      <div className="z-[100] w-96 bg-white  border shadow">
         {error.message}
       </div>
     );
@@ -25,7 +25,7 @@ export const SearchResults = (props) => {
 
   if (isEmpty) {
     return (
-      <div className=" w-64 h-10 flex justify-center items-center  bg-white  border shadow z-[100]">
+      <div className=" w-96 h-10 flex justify-center items-center  bg-white  border shadow z-[100]">
         {"検索結果0件"}
       </div>
     );

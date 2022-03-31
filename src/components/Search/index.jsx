@@ -28,7 +28,7 @@ export const Search = () => {
   };
 
   return (
-    <div className="relative mr-20">
+    <div className="relative">
       <TextInput
         className="w-96"
         icon={<BiSearch />}
