@@ -1,13 +1,13 @@
 import React from "react";
 import { Header } from "src/components/Header";
-import { Folder } from "src/components/Folder";
+import { SideBar } from "src/components/SideBar";
 
 const Layout = ({ children }) => {
   return (
     <div>
       <Header />
       <div className="flex">
-        <Folder />
+        <SideBar />
         {children}
       </div>
     </div>

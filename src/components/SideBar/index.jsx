@@ -12,7 +12,7 @@ import { useFolders } from "src/hooks/useFolders";
 import { useMemos } from "src/hooks/useMemos";
 import { useSWRConfig } from "swr";
 
-export const Folder = () => {
+export const SideBar = () => {
   const router = useRouter();
   const { mutate } = useSWRConfig();
   const {
