@@ -15,8 +15,12 @@ import { useSWRConfig } from "swr";
 export const Folder = () => {
   const router = useRouter();
   const { mutate } = useSWRConfig();
-  const { data: folders, error, isLoading } = useFolders();
-  const { data: memos } = useMemos();
+  const {
+    data: folders,
+    error: folderError,
+    isLoading: folderLoading,
+  } = useFolders();
+  const { data: memos, error: memoError, isLoading: memoLoading } = useMemos();
 
   console.log(router.query.id);
 
@@ -61,9 +65,11 @@ export const Folder = () => {
     }
   };
 
-  const handleClickNewMemo = () => {};
+  const handleClickNewMemo = () => {
+    router.push({ pathname: "/", query: { tabKey: "memo" } });
+  };
 
-  if (isLoading) {
+  if (folderLoading || memoLoading) {
     return (
       <div className="min-h-[calc(100vh-48px)] w-1/5 border-r border-black flex justify-center items-center">
         <Loader size="sm" />
@@ -71,14 +77,36 @@ export const Folder = () => {
     );
   }
 
-  if (error) {
-    return <div>{error.message}</div>;
+  if (folderError || memoError) {
+    return <div>エラーが発生しました。</div>;
   }
 
   return (
     <div className="min-h-[calc(100vh-48px)] w-1/5 border-r border-black">
       <Accordion iconSize={18} multiple initialItem={0} iconPosition="right">
         <Accordion.Item label="URL">
+          <div>
+            {form.values.folder.length ? (
+              <TextInput
+                className="mb-2"
+                sx={{ flex: 1 }}
+                onBlur={handleOnBlur}
+                onKeyDown={handleKeyDown}
+                autoFocus={true}
+                {...form.getListInputProps("folder", 0, "name")}
+              />
+            ) : null}
+            <Button
+              className="p-0"
+              compact
+              variant="subtle"
+              onClick={handleClickNewFolder}
+              disabled={form.values.folder.length ? true : false}
+            >
+              <AiOutlineFolderAdd className="text-xl" />
+              <p className="ml-1">New Folder</p>
+            </Button>
+          </div>
           <ul>
             {folders.map((folder) => (
               <li
@@ -122,57 +150,10 @@ export const Folder = () => {
               </li>
             ))}
           </ul>
-          <div>
-            {form.values.folder.length ? (
-              <TextInput
-                className="mb-2"
-                sx={{ flex: 1 }}
-                onBlur={handleOnBlur}
-                onKeyDown={handleKeyDown}
-                autoFocus={true}
-                {...form.getListInputProps("folder", 0, "name")}
-              />
-            ) : null}
-            <Button
-              className="p-0"
-              compact
-              variant="subtle"
-              onClick={handleClickNewFolder}
-              disabled={form.values.folder.length ? true : false}
-            >
-              <AiOutlineFolderAdd className="text-xl" />
-              <p className="ml-1">New Folder</p>
-            </Button>
-          </div>
         </Accordion.Item>
 
         <Accordion.Item label="Memo">
           <div>
-            <ul>
-              {memos
-                ? memos.map((memo) => (
-                    <li
-                      className={`${
-                        router.query?.id === memo.id
-                          ? "bg-gray-200"
-                          : "hover:bg-gray-100"
-                      } p-1 rounded-sm transition  hover:transition`}
-                      key={memo.id}
-                    >
-                      <Link href={`/memos/${memo.id}`}>
-                        <a>
-                          <p className="truncate">
-                            {memo.body.replace(/(<([^>]+)>)/gi, "")}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            2022年3月31日 13:00
-                          </p>
-                        </a>
-                      </Link>
-                    </li>
-                  ))
-                : null}
-            </ul>
             <Button
               className="p-0"
               compact
@@ -183,6 +164,29 @@ export const Folder = () => {
               <AiOutlineFileAdd className="text-lg" />
               <p className="ml-1">New Memo</p>
             </Button>
+            <ul>
+              {memos.map((memo) => (
+                <li
+                  className={`${
+                    router.query?.id === memo.id
+                      ? "bg-gray-200"
+                      : "hover:bg-gray-100"
+                  } p-1 rounded-sm transition  hover:transition`}
+                  key={memo.id}
+                >
+                  <Link href={`/memos/${memo.id}`}>
+                    <a>
+                      <p className="truncate">
+                        {memo.body.replace(/(<([^>]+)>)/gi, "")}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        2022年3月31日 13:00
+                      </p>
+                    </a>
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
         </Accordion.Item>
       </Accordion>

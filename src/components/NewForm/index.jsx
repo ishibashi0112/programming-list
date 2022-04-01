@@ -64,7 +64,9 @@ export const NewForm = () => {
   };
 
   useEffect(() => {
-    form.setFieldValue("folder_id", router.query.folderId);
+    if (router.query.folderId) {
+      form.setFieldValue("folder_id", router.query.folderId);
+    }
   }, [router.query.folderId]);
 
   useEffect(() => {
@@ -74,7 +76,12 @@ export const NewForm = () => {
 
   return (
     <div className="w-full flex flex-col items-center">
-      <Tabs className="w-3/4 mt-8 " grow position="center" initialTab={0}>
+      <Tabs
+        className="w-3/4 mt-8 "
+        grow
+        position="center"
+        initialTab={router.query?.tabKey ? 1 : 0}
+      >
         <Tabs.Tab className="font-bold" label="Url" tabKey="First">
           <form
             className="w-3/4 mx-auto mt-8 flex flex-col gap-3"

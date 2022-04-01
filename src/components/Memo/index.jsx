@@ -1,4 +1,4 @@
-import { Button, Loader } from "@mantine/core";
+import { Button, Dialog, Loader, Modal } from "@mantine/core";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useMemo as useMemoId } from "src/hooks/useMemo";
@@ -12,6 +12,7 @@ export const Memo = () => {
   const { data: memo, error, isLoading } = useMemoId();
   const [text, setText] = useState("");
   const [isEdit, setIsEdit] = useState(true);
+  const [modalOpened, setModalOpened] = useState(false);
 
   const handleClickEdit = () => {
     setIsEdit(isEdit ? false : true);
@@ -75,7 +76,12 @@ export const Memo = () => {
           <p>{isEdit ? "edit" : "cancel"}</p>
         </Button>
         {isEdit && (
-          <Button variant="subtle" onClick={handleClickRemove}>
+          <Button
+            className="relative"
+            variant="subtle"
+            // onClick={handleClickRemove}
+            onClick={() => setModalOpened(true)}
+          >
             <p>
               <AiOutlineDelete />
             </p>
@@ -84,10 +90,41 @@ export const Memo = () => {
         )}
       </div>
 
+      <Modal
+        classNames={{
+          root: "your-root-class",
+          inner: "your-inner-class",
+          modal: "w-60",
+          header: "justify-center",
+          overlay: " opacity-0",
+          title: "justify-center",
+          body: "your-body-class",
+          close: "your-close-class",
+        }}
+        opened={modalOpened}
+        onClose={() => setModalOpened(false)}
+        title="メモを削除しますか？"
+        size="xs"
+        shadow="xs"
+        withCloseButton={false}
+      >
+        <div className="flex justify-center ">
+          <Button className="m-1" variant="outline" onClick={handleClickRemove}>
+            yes
+          </Button>
+          <Button
+            className="m-1"
+            variant="outline"
+            onClick={() => setModalOpened(false)}
+          >
+            no
+          </Button>
+        </div>
+      </Modal>
+
       <RichTextEditor
         className="mt-4 min-h-[300px]"
         value={text}
-        // onChange={handleOnChange}
         onChange={setText}
         readOnly={isEdit}
       />

@@ -3,6 +3,7 @@ import { useForm } from "@mantine/form";
 import React from "react";
 import { mutate } from "swr";
 import RichTextEditor from "src/components/RichTextEditorImport";
+import { useRouter } from "next/router";
 
 const createMemo = async (value) => {
   const params = {
@@ -20,17 +21,16 @@ const createMemo = async (value) => {
 };
 
 export const MemoForm = () => {
+  const router = useRouter();
   const memoForm = useForm({
     initialValues: { memo: "" },
   });
 
   const handleSubmit = async (values) => {
-    console.log(values);
-    await createMemo(values);
-
+    const newMemo = await createMemo(values);
+    mutate("/api/memos/findAllMemo");
     memoForm.reset();
-    // mutate("/api/folders/findAllFolder");
-    // mutate("/api/findAllTag");
+    router.push(`/memos/${newMemo.id}`);
   };
 
   return (
