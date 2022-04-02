@@ -1,4 +1,4 @@
-import { Button, Modal } from "@mantine/core";
+import { Button, Loader, Modal } from "@mantine/core";
 import React, { useState } from "react";
 import { useSWRConfig } from "swr";
 
@@ -7,8 +7,10 @@ export const useDeleteFetchModal = (API_URL, MUTATE_URL) => {
   const [fetchData, setFetchData] = useState("");
   const [titleValue, setTitleValue] = useState("");
   const [isModalOpened, setIsModalOpened] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const deleteFecth = async () => {
+    setIsLoading(true);
     const bodyParams = { data: fetchData };
     console.log(bodyParams);
     const params = {
@@ -19,8 +21,9 @@ export const useDeleteFetchModal = (API_URL, MUTATE_URL) => {
       body: JSON.stringify(bodyParams),
     };
     await fetch(API_URL, params);
+    await mutate(MUTATE_URL);
     setIsModalOpened(false);
-    mutate(MUTATE_URL);
+    setIsLoading(false);
   };
 
   return {
@@ -37,9 +40,10 @@ export const useDeleteFetchModal = (API_URL, MUTATE_URL) => {
           header: "justify-center",
           overlay: "",
           title: "justify-center",
-          body: "your-body-class",
+          body: "flex justify-center items-center",
           close: "your-close-class",
         }}
+        centered
         opened={isModalOpened}
         onClose={() => setIsModalOpened(false)}
         title={`${titleValue}を削除しますか？`}
@@ -47,18 +51,27 @@ export const useDeleteFetchModal = (API_URL, MUTATE_URL) => {
         shadow="xs"
         withCloseButton={false}
       >
-        <div className="flex justify-center ">
-          <Button className="m-1" variant="outline" onClick={deleteFecth}>
-            削除
-          </Button>
-          <Button
-            className="m-1"
-            variant="outline"
-            onClick={() => setIsModalOpened(false)}
-          >
-            キャンセル
-          </Button>
-        </div>
+        {isLoading ? (
+          <Loader size="sm" />
+        ) : (
+          <div className="flex justify-center ">
+            <Button
+              className="m-1"
+              color="red"
+              variant="outline"
+              onClick={deleteFecth}
+            >
+              削除
+            </Button>
+            <Button
+              className="m-1"
+              variant="outline"
+              onClick={() => setIsModalOpened(false)}
+            >
+              キャンセル
+            </Button>
+          </div>
+        )}
       </Modal>
     ),
   };

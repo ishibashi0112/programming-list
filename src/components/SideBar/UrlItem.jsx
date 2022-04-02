@@ -1,4 +1,4 @@
-import { Button, Loader, TextInput, Tooltip } from "@mantine/core";
+import { Button, Loader, Skeleton, TextInput, Tooltip } from "@mantine/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useCallback } from "react";
@@ -16,6 +16,7 @@ export const UrlItem = () => {
   const router = useRouter();
   const [text, setText] = useState("");
   const [isAppendTextInput, setIsAppendTextInput] = useState(false);
+  const [newFolderLoading, setNewFolderLoading] = useState(false);
   const { mutate } = useSWRConfig();
   const {
     data: folders,
@@ -42,7 +43,7 @@ export const UrlItem = () => {
     const res = await fetch("/api/folders/createFolder", params);
     const json = await res.json();
     console.log(json);
-    mutate("/api/folders/findAllFolder");
+    await mutate("/api/folders/findAllFolder");
   };
 
   const handleClickNewFolder = useCallback(() => {
@@ -53,19 +54,24 @@ export const UrlItem = () => {
     setText(e.currentTarget.value);
   }, []);
 
-  const handleOnBlur = useCallback((e) => {
+  const handleOnBlur = useCallback(async (e) => {
     const value = e.target.value;
     if (value) {
-      createFolder(value);
+      setIsAppendTextInput(false);
+      setNewFolderLoading(true);
+      await createFolder(value);
+      setNewFolderLoading(false);
     }
     setIsAppendTextInput(false);
   }, []);
 
-  const handleKeyDown = useCallback((e) => {
+  const handleKeyDown = useCallback(async (e) => {
     const value = e.target.value;
     if (e.keyCode === 13 && value) {
-      createFolder(value);
       setIsAppendTextInput(false);
+      setNewFolderLoading(true);
+      await createFolder(value);
+      setNewFolderLoading(false);
     } else if (e.keyCode === 13 && !value) {
       setIsAppendTextInput(false);
     }
@@ -110,7 +116,7 @@ export const UrlItem = () => {
         compact
         variant="subtle"
         onClick={handleClickNewFolder}
-        disabled={isAppendTextInput ? true : false}
+        disabled={newFolderLoading}
       >
         <AiOutlineFolderAdd className="text-xl" />
         <p className="ml-1">New Folder</p>
@@ -173,8 +179,6 @@ export const UrlItem = () => {
         ))}
       </ul>
 
-      {deleteModal}
-
       {isAppendTextInput ? (
         <TextInput
           className="mb-2"
@@ -186,6 +190,14 @@ export const UrlItem = () => {
           autoFocus={true}
         />
       ) : null}
+
+      <Skeleton
+        hidden={!newFolderLoading}
+        height={25}
+        visible={newFolderLoading}
+      />
+
+      {deleteModal}
     </>
   );
 };
