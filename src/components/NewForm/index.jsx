@@ -96,7 +96,7 @@ export const NewForm = () => {
               disabled={router.query.folderId ? true : false}
               required
               searchable
-              clearable
+              clearable={router.query.folderId ? false : true}
               nothingFound="No Folder"
               {...form.getInputProps("folder_id")}
             />
