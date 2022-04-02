@@ -8,11 +8,7 @@ export default async (req, res) => {
     const folder = await prisma.folder.findMany({
       where: { user_id: session.userId },
       include: {
-        posts: {
-          select: {
-            id: true,
-          },
-        },
+        posts: { include: { tags: true } },
       },
     });
 
