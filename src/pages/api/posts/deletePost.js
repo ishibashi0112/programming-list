@@ -1,4 +1,3 @@
-import { data } from "autoprefixer";
 import { getSession } from "next-auth/react";
 import { prisma } from "src/utils/prismaClient";
 
