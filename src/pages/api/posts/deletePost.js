@@ -5,7 +5,7 @@ export default async (req, res) => {
   const session = await getSession({ req });
 
   if (session) {
-    const post = req.body.post;
+    const post = req.body.data;
 
     if (post.tags.length) {
       await prisma.post.update({

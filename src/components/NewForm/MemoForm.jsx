@@ -1,6 +1,6 @@
-import { Button } from "@mantine/core";
+import { Button, Loader, Overlay } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { mutate } from "swr";
 import RichTextEditor from "src/components/RichTextEditorImport";
 import { useRouter } from "next/router";
@@ -22,16 +22,25 @@ const createMemo = async (value) => {
 
 export const MemoForm = () => {
   const router = useRouter();
+  const [isSubmitLoading, setIsSubmitLoading] = useState(false);
   const memoForm = useForm({
     initialValues: { memo: "" },
   });
 
-  const handleSubmit = async (values) => {
-    const newMemo = await createMemo(values);
-    mutate("/api/memos/findAllMemo");
-    memoForm.reset();
-    router.push(`/memos/${newMemo.id}`);
-  };
+  const handleSubmit = useCallback(
+    async (values) => {
+      //空と空行のみは処理をスルー
+      if (values.memo.replace(/(<([^>]+)>)/gi, "")) {
+        setIsSubmitLoading(true);
+        const newMemo = await createMemo(values);
+        await mutate("/api/memos/findAllMemo");
+        memoForm.reset();
+        setIsSubmitLoading(false);
+        router.push(`/memos/${newMemo.id}`);
+      }
+    },
+    [memoForm, router]
+  );
 
   return (
     <form className="w-full" onSubmit={memoForm.onSubmit(handleSubmit)}>
@@ -44,10 +53,16 @@ export const MemoForm = () => {
         ]}
         {...memoForm.getInputProps("memo")}
       />
-
-      <Button className=" w-full mt-4 mb-10 bg-gray-500  " type="submit">
-        Submit
-      </Button>
+      {isSubmitLoading ? (
+        <div className="flex justify-center mt-8">
+          <Loader color="gray" variant="dots" />
+          <Overlay opacity={0} color="#000" />
+        </div>
+      ) : (
+        <Button className=" w-full mt-4 mb-10 bg-gray-500  " type="submit">
+          Submit
+        </Button>
+      )}
     </form>
   );
 };

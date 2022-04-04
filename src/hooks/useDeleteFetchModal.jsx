@@ -1,18 +1,22 @@
 import { Button, Loader, Modal } from "@mantine/core";
-import React, { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useState, useCallback } from "react";
 import { useSWRConfig } from "swr";
 
-export const useDeleteFetchModal = (API_URL, MUTATE_URL) => {
+export const useDeleteFetchModal = () => {
+  const router = useRouter();
   const { mutate } = useSWRConfig();
-  const [fetchData, setFetchData] = useState("");
-  const [titleValue, setTitleValue] = useState("");
+  const [deleteModalData, setDeleteModalData] = useState({});
   const [isModalOpened, setIsModalOpened] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const deleteFecth = async () => {
+  const { apiUrl, mutateUrls, fetchData, titleValue, redirectUrl } =
+    Object.keys(deleteModalData).length ? deleteModalData : {};
+
+  const deleteFecth = useCallback(async () => {
     setIsLoading(true);
     const bodyParams = { data: fetchData };
-    console.log(bodyParams);
+
     const params = {
       method: "DELETE",
       headers: {
@@ -20,17 +24,23 @@ export const useDeleteFetchModal = (API_URL, MUTATE_URL) => {
       },
       body: JSON.stringify(bodyParams),
     };
-    await fetch(API_URL, params);
-    await mutate(MUTATE_URL);
+    await fetch(apiUrl, params);
+    await Promise.all(
+      mutateUrls.map(async (url) => {
+        await mutate(url);
+      })
+    );
     setIsModalOpened(false);
     setIsLoading(false);
-  };
+    if (redirectUrl) {
+      router.push(redirectUrl);
+    }
+  }, [router, fetchData, apiUrl, mutateUrls, redirectUrl]);
 
   return {
     isModalOpened,
+    setDeleteModalData,
     setIsModalOpened,
-    setFetchData,
-    setTitleValue,
     deleteModal: (
       <Modal
         classNames={{
@@ -45,7 +55,7 @@ export const useDeleteFetchModal = (API_URL, MUTATE_URL) => {
         }}
         centered
         opened={isModalOpened}
-        onClose={() => setIsModalOpened(false)}
+        onClose={() => setIsModalOpened(isLoading ? true : false)}
         title={`${titleValue}を削除しますか？`}
         size="xs"
         shadow="xs"

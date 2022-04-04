@@ -1,14 +1,14 @@
 import Head from "next/head";
 import React from "react";
-
 import { SessionProvider } from "next-auth/react";
 import "tailwindcss/tailwind.css";
+import { AuthCheak } from "src/components/AuthCheak";
 
 const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
   const getLayout = Component.getLayout || ((page) => page);
-
   return (
     <SessionProvider session={session}>
+      {/* <AuthCheak> */}
       {getLayout(
         <>
           <Head>
@@ -17,6 +17,7 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
           <Component {...pageProps} />
         </>
       )}
+      {/* </AuthCheak> */}
     </SessionProvider>
   );
 };

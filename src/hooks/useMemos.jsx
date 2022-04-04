@@ -1,8 +1,8 @@
 import { fetcher } from "src/utils/fetcher";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 
 export const useMemos = () => {
-  const { data, error } = useSWR("/api/memos/findAllMemo", fetcher);
+  const { data, error } = useSWRImmutable("/api/memos/findAllMemo", fetcher);
 
   return {
     data,

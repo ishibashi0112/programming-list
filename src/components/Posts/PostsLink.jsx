@@ -1,11 +1,21 @@
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { TagsLink } from "src/components/Tag/TagsLink";
 import Image from "next/image";
-import { Button, Menu, Modal, MultiSelect, TextInput } from "@mantine/core";
+import {
+  Button,
+  Loader,
+  Menu,
+  Modal,
+  MultiSelect,
+  TextInput,
+} from "@mantine/core";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { useForm } from "@mantine/form";
 import { useTags } from "src/hooks/useTags";
+import { useDeleteFetchModal } from "src/hooks/useDeleteFetchModal";
+import { mutate } from "swr";
+import { useRouter } from "next/router";
 
 const tagsArray = (tags) => {
   const results = tags.map((tag) => tag.name);
@@ -13,10 +23,17 @@ const tagsArray = (tags) => {
 };
 
 export const PostsLink = (props) => {
+  const router = useRouter();
+  console.log(router.query.id);
   const [editModalOpened, setEditModalOpened] = useState(false);
-  const [removeModalOpened, setRemoveModalOpened] = useState(false);
+  const [isEditLoading, setIsEditLoading] = useState(false);
   const { data: tags } = useTags();
   const [tagsSelectData, setTagsSelectData] = useState([]);
+  const {
+    deleteModal,
+    setDeleteModalData,
+    setIsModalOpened: setIsDeleteModalOpened,
+  } = useDeleteFetchModal();
   const editForm = useForm({
     initialValues: {
       post: "",
@@ -25,67 +42,85 @@ export const PostsLink = (props) => {
     },
   });
 
-  const newTagLabel = (query) => {
+  const newTagLabel = useCallback((query) => {
     return `+ New Tag ${query}`;
-  };
+  }, []);
 
-  const handleCreateTag = (query) => {
+  const handleCreateTag = useCallback((query) => {
     setTagsSelectData((prev) => [...prev, query]);
-  };
+  }, []);
 
-  const handleClickEdit = (post) => {
-    editForm.setValues({
-      post,
-      name: post.name,
-      tags: tagsArray(post.tags),
-    });
-    setEditModalOpened(true);
-  };
-  const handleClickRemove = () => {
-    setRemoveModalOpened(true);
-  };
+  const handleClickEdit = useCallback(
+    (post) => {
+      editForm.setValues({
+        post,
+        name: post.name,
+        tags: tagsArray(post.tags),
+      });
+      setEditModalOpened(true);
+    },
+    [editForm]
+  );
 
-  const handleDelete = async (post) => {
-    const bodyParams = { post };
-    const params = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(bodyParams),
-    };
+  const handleClickRemove = useCallback(
+    (post) => {
+      setDeleteModalData({
+        apiUrl: "/api/posts/deletePost",
+        mutateUrls: [
+          "/api/folders/findAllFolder",
+          router.pathname === "/posts/[id]"
+            ? `/api/posts/findPost?folder_id=${router.query.id}`
+            : `/api/posts/findPost?tag_id=${router.query.id}`,
+        ],
+        fetchData: post,
+        titleValue: post.name,
+      });
+      setIsDeleteModalOpened(true);
+    },
+    [router]
+  );
 
-    await fetch("/api/posts/deletePost", params);
-    alert("削除しました");
-    setRemoveModalOpened(false);
-  };
+  const handleSubmit = useCallback(
+    async (value) => {
+      setIsEditLoading(true);
+      console.log(value);
+      const prevTags = value.post.tags.map((tag) => tag.name);
+      const newTags = value.tags;
 
-  const handleSubmit = async (value) => {
-    const prevTags = value.post.tags.map((tag) => tag.name);
-    const newTags = value.tags;
+      const updateTags = newTags.filter((newTag) => !prevTags.includes(newTag));
+      const deleteTags = prevTags.filter(
+        (prevTag) => !newTags.includes(prevTag)
+      );
 
-    const updateTags = newTags.filter((newTag) => !prevTags.includes(newTag));
-    const deleteTags = prevTags.filter((prevTag) => !newTags.includes(prevTag));
+      const bodyParams = {
+        post_id: value.post.id,
+        name: value.name,
+        updateTags,
+        deleteTags,
+      };
 
-    const bodyParams = {
-      post_id: value.post.id,
-      name: value.name,
-      updateTags,
-      deleteTags,
-    };
+      const params = {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyParams),
+      };
 
-    const params = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(bodyParams),
-    };
+      await fetch("/api/posts/updatePost", params);
+      await mutate("/api/findAllTag");
+      if (router.pathname === "/posts/[id]") {
+        await mutate(`/api/posts/findPost?folder_id=${router.query.id}`);
+      }
+      if (router.pathname === "/tags/[id]") {
+        await mutate(`/api/posts/findPost?tag_id=${router.query.id}`);
+      }
 
-    await fetch("/api/posts/updatePost", params);
-    alert("更新しました");
-    setEditModalOpened(false);
-  };
+      setIsEditLoading(false);
+      setEditModalOpened(false);
+    },
+    [router]
+  );
 
   useEffect(() => {
     if (tags) {
@@ -124,82 +159,11 @@ export const PostsLink = (props) => {
             <Menu.Item
               className="font-bold text-red-400 hover:bg-red-50"
               icon={<AiOutlineDelete />}
-              onClick={handleClickRemove}
+              onClick={() => handleClickRemove(post)}
             >
               remove
             </Menu.Item>
           </Menu>
-
-          <Modal
-            classNames={{
-              header: "mb-0",
-              overlay: "opacity-0",
-            }}
-            opened={editModalOpened}
-            onClose={() => setEditModalOpened(false)}
-            title="Edit Page"
-          >
-            <p className="text-xs text-gray-500 mb-2">
-              *タイトルとタグの編集ができます。
-            </p>
-            <form
-              className="flex flex-col gap-3"
-              onSubmit={editForm.onSubmit(handleSubmit)}
-            >
-              <TextInput label="Name" {...editForm.getInputProps("name")} />
-              <MultiSelect
-                data={tagsSelectData}
-                label="Tags"
-                placeholder="Pick all that you like"
-                searchable
-                nothingFound
-                clearable
-                creatable
-                onCreate={handleCreateTag}
-                getCreateLabel={newTagLabel}
-                {...editForm.getInputProps("tags")}
-              />
-              <Button className="mt-3 op bg-blue-400 " type="submit">
-                save
-              </Button>
-            </form>
-          </Modal>
-
-          <Modal
-            classNames={{
-              root: "your-root-class",
-              inner: "your-inner-class",
-              modal: "w-60",
-              header: "justify-center",
-              overlay: "opacity-0",
-              title: "justify-center",
-              body: "your-body-class",
-              close: "your-close-class",
-            }}
-            opened={removeModalOpened}
-            onClose={() => setRemoveModalOpened(false)}
-            title="削除しますか？"
-            size="xs"
-            shadow="xs"
-            withCloseButton={false}
-          >
-            <div className="flex justify-center ">
-              <Button
-                className="m-1"
-                variant="outline"
-                onClick={() => handleDelete(post)}
-              >
-                yes
-              </Button>
-              <Button
-                className="m-1"
-                variant="outline"
-                onClick={() => setRemoveModalOpened(false)}
-              >
-                no
-              </Button>
-            </div>
-          </Modal>
 
           <Link href={post.url}>
             <a
@@ -227,6 +191,48 @@ export const PostsLink = (props) => {
           <TagsLink post={post} />
         </li>
       ))}
+      {deleteModal}
+      <Modal
+        classNames={{
+          header: "mb-0",
+          overlay: "",
+        }}
+        opened={editModalOpened}
+        onClose={() => setEditModalOpened(isEditLoading ? true : false)}
+        title="Edit Page"
+        centered
+      >
+        <p className="text-xs text-gray-500 mb-2">
+          *タイトルとタグの編集ができます。
+        </p>
+        <form
+          className="flex flex-col gap-3"
+          onSubmit={editForm.onSubmit(handleSubmit)}
+        >
+          <TextInput label="Name" {...editForm.getInputProps("name")} />
+          <MultiSelect
+            data={tagsSelectData}
+            label="Tags"
+            placeholder="Pick all that you like"
+            searchable
+            nothingFound
+            clearable
+            creatable
+            onCreate={handleCreateTag}
+            getCreateLabel={newTagLabel}
+            {...editForm.getInputProps("tags")}
+          />
+          {isEditLoading ? (
+            <div className="flex justify-center mt-3">
+              <Loader color="gray" variant="dots" />
+            </div>
+          ) : (
+            <Button className="mt-3 bg-blue-400 " type="submit">
+              save
+            </Button>
+          )}
+        </form>
+      </Modal>
     </ul>
   );
 };

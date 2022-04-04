@@ -2,32 +2,26 @@ import { Button, Loader } from "@mantine/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useCallback } from "react";
-import { useFolders } from "src/hooks/useFolders";
 import { useMemos } from "src/hooks/useMemos";
 import { AiOutlineFileAdd } from "react-icons/ai";
 
 export const MemoItem = () => {
   const router = useRouter();
-  const {
-    data: folders,
-    error: folderError,
-    isLoading: folderLoading,
-  } = useFolders();
-  const { data: memos, error: memoError, isLoading: memoLoading } = useMemos();
+  const { data: memos, error, isLoading } = useMemos();
 
   const handleClickNewMemo = useCallback(() => {
     router.push({ pathname: "/", query: { tabKey: "memo" } });
   }, [router]);
 
-  if (folderLoading || memoLoading) {
+  if (isLoading) {
     return (
-      <div className="min-h-[calc(100vh-48px)] w-1/5 border-r border-black flex justify-center items-center">
+      <div className="">
         <Loader size="sm" />
       </div>
     );
   }
 
-  if (folderError || memoError) {
+  if (error) {
     return <div>エラーが発生しました。</div>;
   }
 

@@ -4,9 +4,9 @@ import { SideBar } from "src/components/SideBar";
 
 const Layout = ({ children }) => {
   return (
-    <div>
+    <div className="h-screen">
       <Header />
-      <div className="flex">
+      <div className="flex h-[calc(100%-48px)]">
         <SideBar />
         {children}
       </div>

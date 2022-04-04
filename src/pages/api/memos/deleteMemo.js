@@ -5,10 +5,11 @@ export default async (req, res) => {
   const session = await getSession({ req });
 
   if (session) {
+    const memoId = req.body.data.id;
     const memo = await prisma.memo.delete({
-      where: { id: req.body.id },
+      where: { id: memoId },
     });
-    console.log(memo);
+
     res.json(memo);
   } else {
     res.status(401);

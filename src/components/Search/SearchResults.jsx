@@ -32,11 +32,14 @@ export const SearchResults = (props) => {
   }
 
   return (
-    <div className="z-[100] w-96 bg-white  border shadow">
+    <div className="bg-white  border rounded-b-md ">
       <ul>
-        <li className="p-1">{`検索結果${posts.length}件`}</li>
+        <li className="p-1 border-b">{`検索結果${posts.length}件`}</li>
         {posts.map((post) => (
-          <li className="border-b p-1" key={post.id}>
+          <li
+            className="p-2 m-1 rounded-md transition hover:transition hover:bg-gray-200"
+            key={post.id}
+          >
             <Link href={post.url}>
               <a target="_blank" rel="noopener noreferrer">
                 <p className="font-bold truncate">
@@ -45,10 +48,10 @@ export const SearchResults = (props) => {
                 <p className="text-gray-500 text-sm truncate">{post.url}</p>
               </a>
             </Link>
-            <ul className="flex gap-2">
+            <ul className="flex flex-wrap gap-2">
               {post.tags.map((tag) => (
                 <li
-                  className="bg-gray-500 text-white px-[0.3rem] py-[0.1rem] rounded-xl text-xs"
+                  className="flex items-center bg-gray-500 h-5 max-w-[120px] px-1 text-white  rounded-xl text-xs truncate "
                   key={tag.id}
                 >
                   <div className="flex">

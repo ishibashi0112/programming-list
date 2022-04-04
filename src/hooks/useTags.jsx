@@ -1,8 +1,8 @@
 import { fetcher } from "src/utils/fetcher";
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 
 export const useTags = () => {
-  const { data, error } = useSWR("/api/findAllTag", fetcher);
+  const { data, error } = useSWRImmutable("/api/findAllTag", fetcher);
 
   return {
     data,

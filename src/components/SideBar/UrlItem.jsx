@@ -9,7 +9,6 @@ import {
 } from "react-icons/ai";
 import { useDeleteFetchModal } from "src/hooks/useDeleteFetchModal";
 import { useFolders } from "src/hooks/useFolders";
-import { useMemos } from "src/hooks/useMemos";
 import { useSWRConfig } from "swr";
 
 export const UrlItem = () => {
@@ -18,18 +17,12 @@ export const UrlItem = () => {
   const [isAppendTextInput, setIsAppendTextInput] = useState(false);
   const [newFolderLoading, setNewFolderLoading] = useState(false);
   const { mutate } = useSWRConfig();
-  const {
-    data: folders,
-    error: folderError,
-    isLoading: folderLoading,
-  } = useFolders();
-  const { data: memos, error: memoError, isLoading: memoLoading } = useMemos();
 
-  const { deleteModal, setIsModalOpened, setFetchData, setTitleValue } =
-    useDeleteFetchModal(
-      "/api/folders/deleteFolder",
-      "/api/folders/findAllFolder"
-    );
+  const { data: folders, error, isLoading } = useFolders();
+  console.log(folders);
+
+  const { deleteModal, setDeleteModalData, setIsModalOpened } =
+    useDeleteFetchModal();
 
   const createFolder = async (value) => {
     const folderName = { name: value };
@@ -88,8 +81,12 @@ export const UrlItem = () => {
   );
 
   const handleClickRemove = useCallback((folder) => {
-    setFetchData(folder);
-    setTitleValue(`${folder.name}フォルダー`);
+    setDeleteModalData({
+      apiUrl: "/api/folders/deleteFolder",
+      mutateUrls: ["/api/folders/findAllFolder"],
+      fetchData: folder,
+      titleValue: `${folder.name}フォルダー`,
+    });
     setIsModalOpened(true);
   }, []);
 
@@ -97,15 +94,15 @@ export const UrlItem = () => {
     setText("");
   }, [isAppendTextInput]);
 
-  if (folderLoading || memoLoading) {
+  if (isLoading) {
     return (
-      <div className="min-h-[calc(100vh-48px)] w-1/5 border-r border-black flex justify-center items-center">
+      <div className="">
         <Loader size="sm" />
       </div>
     );
   }
 
-  if (folderError || memoError) {
+  if (error) {
     return <div>エラーが発生しました。</div>;
   }
 
