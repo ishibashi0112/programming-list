@@ -45,7 +45,14 @@ export const MemoForm = () => {
   return (
     <form className="w-full" onSubmit={memoForm.onSubmit(handleSubmit)}>
       <RichTextEditor
-        className="mt-8 min-h-[300px]"
+        classNames={{
+          root: "mt-8 min-h-[300px] dark:bg-neutral-700	dark:border-neutral-700 dark:text-gray-300 ",
+          toolbar: "dark:bg-neutral-800	dark:border-neutral-800",
+          toolbarInner: "your-toolbarInner-class",
+          toolbarGroup: "your-toolbarGroup-class",
+          toolbarControl:
+            "dark:bg-neutral-600	dark:border-neutral-600 dark:text-gray-300",
+        }}
         controls={[
           ["bold", "h2", "italic", "underline", "strike"],
           ["unorderedList", "orderedList"],
@@ -59,7 +66,7 @@ export const MemoForm = () => {
           <Overlay opacity={0} color="#000" />
         </div>
       ) : (
-        <Button className=" w-full mt-4 mb-10 bg-gray-500  " type="submit">
+        <Button className=" w-full mt-4 mb-10 bg-blue-400  " type="submit">
           Submit
         </Button>
       )}

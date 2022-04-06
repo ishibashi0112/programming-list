@@ -29,7 +29,7 @@ export const MemoItem = () => {
     <>
       <div>
         <Button
-          className="p-0"
+          className="p-0 dark:hover:bg-neutral-600"
           compact
           variant="subtle"
           onClick={handleClickNewMemo}
@@ -42,14 +42,14 @@ export const MemoItem = () => {
             <li
               className={`${
                 router.query?.id === memo.id
-                  ? "bg-gray-200"
-                  : "hover:bg-gray-100"
+                  ? "bg-gray-200 dark:bg-neutral-700"
+                  : "hover:bg-gray-100 dark:hover:bg-neutral-800"
               } p-1 rounded-sm transition  hover:transition`}
               key={memo.id}
             >
               <Link href={`/memos/${memo.id}`}>
                 <a>
-                  <p className="truncate">
+                  <p className="truncate dark:text-gray-400">
                     {memo.body.replace(/(<([^>]+)>)/gi, "")}
                   </p>
                   <p className="text-sm text-gray-500">2022年3月31日 13:00</p>

@@ -1,4 +1,4 @@
-import { Loader } from "@mantine/core";
+import { Skeleton } from "@mantine/core";
 import React from "react";
 import { usePostsByTagId } from "src/hooks/usePostsByTagId";
 import { useRouter } from "next/router";
@@ -8,12 +8,25 @@ import { PostsLink } from "../Posts/PostsLink";
 export const Tag = () => {
   const router = useRouter();
   const { data: posts, error, isLoading } = usePostsByTagId();
-  console.log(posts);
 
   if (isLoading) {
     return (
-      <div className="w-4/5 h-[calc(100vh-48px)] flex justify-center items-center">
-        <Loader size="sm" />
+      <div className="w-full p-4 ">
+        <Skeleton className="h-7 w-24 mb-5" />
+        <div className="flex flex-wrap justify-center gap-3">
+          <Skeleton
+            className="h-64 w-64 rounded-md"
+            sx={(theme) => ({
+              backgroundColor: theme.colors.gray[6],
+              // colorScheme === "dark" ? theme.colors.gray[6] : "",
+            })}
+          />
+          <Skeleton className="h-64 w-64 rounded-md" />
+          <Skeleton className="h-64 w-64 rounded-md" />
+          <Skeleton className="h-64 w-64 rounded-md opacity-70" />
+          <Skeleton className="h-64 w-64 rounded-md opacity-40" />
+          <Skeleton className="h-64 w-64 rounded-md opacity-10" />
+        </div>
       </div>
     );
   }
@@ -22,8 +35,8 @@ export const Tag = () => {
   }
 
   return (
-    <div className="p-4">
-      <h1 className="flex items-center mb-5">
+    <div className="p-4 dark:bg-black">
+      <h1 className="flex items-center py-1 px-3 dark:text-gray-400 dark:bg-neutral-900 dark:rounded-t-lg ">
         <div className="flex items-center px-1 py-1 mr-1 text-white text-xl bg-gray-500 rounded-xl ">
           <p className="flex items-center">
             <BsHash />

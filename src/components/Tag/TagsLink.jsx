@@ -13,10 +13,6 @@ export const TagsLink = (props) => {
     return <div className="text-sm text-gray-500">No Tag</div>;
   }
 
-  // if (height === 0) {
-  //   return <div></div>;
-  // }
-
   return (
     <div>
       {height < 24 ? (
@@ -44,10 +40,14 @@ export const TagsLink = (props) => {
         </ul>
       ) : (
         <Popover
+          classNames={{
+            body: "dark:bg-neutral-800 dark:border-neutral-800",
+          }}
           opened={opened}
           onClose={() => setOpened(false)}
           target={
             <Button
+              className="dark:text-gray-400 dark:hover:bg-neutral-700"
               onClick={() => setOpened((o) => !o)}
               color={"dark"}
               variant="subtle"

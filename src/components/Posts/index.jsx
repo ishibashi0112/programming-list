@@ -1,20 +1,27 @@
-import { Loader } from "@mantine/core";
-import React from "react";
+import { Skeleton } from "@mantine/core";
+import React, { useState, useEffect } from "react";
 import { usePostsByFolderId } from "src/hooks/usePostsByFolderId";
 import { AiOutlineFolder } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { PostsLink } from "src/components/Posts/PostsLink";
 import { ImFileEmpty } from "react-icons/im";
+import { useCreateSkeletonEl } from "src/hooks/useCreateSkeletonEl";
+import { useLocalStorage } from "@mantine/hooks";
 
 export const Posts = () => {
   const router = useRouter();
   const { data: posts, error, isLoading, isEmpty } = usePostsByFolderId();
-  console.log(posts);
+  const { skeletonEl } = useCreateSkeletonEl(router.query.postsLength);
 
   if (isLoading) {
     return (
-      <div className="w-full h-[calc(100vh-48px)] flex justify-center items-center">
-        <Loader size="sm" />
+      <div className="w-full p-4  ">
+        <div className="py-1 px-3 dark:bg-neutral-900 dark:rounded-t-lg ">
+          <Skeleton className="h-7 w-24 mb-5 rounded-md" />
+          <div className="flex flex-wrap justify-center gap-4 p-5">
+            {skeletonEl.map((el) => el)}
+          </div>
+        </div>
       </div>
     );
   }
@@ -36,8 +43,8 @@ export const Posts = () => {
   }
 
   return (
-    <div className="p-4">
-      <h1 className="flex items-center mb-5  font-bold text-lg ">
+    <div className="w-full p-4">
+      <h1 className="flex items-center py-1 px-3  font-bold text-lg dark:text-gray-400 dark:bg-neutral-900 dark:rounded-t-lg  ">
         <p className="flex items-center">
           <AiOutlineFolder />
         </p>

@@ -4,7 +4,7 @@ import Layout from "src/layout";
 
 const Memo = () => {
   return (
-    <div className="w-4/5">
+    <div className="w-full h-full md:w-[calc(100%-230px)] md:ml-auto lg:w-4/5">
       <MemoComponent />
     </div>
   );

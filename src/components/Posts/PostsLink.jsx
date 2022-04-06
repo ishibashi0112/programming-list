@@ -28,6 +28,7 @@ export const PostsLink = (props) => {
   const [editModalOpened, setEditModalOpened] = useState(false);
   const [isEditLoading, setIsEditLoading] = useState(false);
   const { data: tags } = useTags();
+  console.log();
   const [tagsSelectData, setTagsSelectData] = useState([]);
   const {
     deleteModal,
@@ -129,35 +130,34 @@ export const PostsLink = (props) => {
   }, [tags]);
 
   return (
-    <ul className="flex flex-wrap gap-4 ">
+    <ul className="flex flex-wrap justify-center gap-4 p-5 dark:bg-neutral-900 dark:rounded-b-lg ">
       {props.posts.map((post) => (
         <li
-          className="relative w-64 h-64 border rounded-md shadow transition hover:transition hover:opacity-80 "
+          className="relative  w-64 h-64 border rounded-md shadow transition hover:transition hover:opacity-80 dark:border-black "
           key={post.id}
         >
           <Menu
             classNames={{
-              root: "absolute top-0  right-0  z-10 rounded-full",
+              root: "absolute top-0  right-0  z-10 rounded-full ",
               label: "p-1 ",
               item: "p-2",
+              body: "dark:bg-neutral-800 dark:border-black",
             }}
-            trigger="hover"
             position="bottom"
             placement="end"
             size={"xs"}
             gutter={3}
-            withArrow
           >
             <Menu.Label>menu</Menu.Label>
             <Menu.Item
-              className="font-bold text-blue-400 hover:bg-sky-50"
+              className="font-bold text-blue-400 hover:bg-sky-50 dark:hover:bg-neutral-700"
               icon={<AiOutlineEdit />}
               onClick={() => handleClickEdit(post)}
             >
               edit
             </Menu.Item>
             <Menu.Item
-              className="font-bold text-red-400 hover:bg-red-50"
+              className="font-bold text-red-400 hover:bg-red-50 dark:hover:bg-neutral-700"
               icon={<AiOutlineDelete />}
               onClick={() => handleClickRemove(post)}
             >
@@ -180,7 +180,9 @@ export const PostsLink = (props) => {
                 />
               </p>
               <div className=" p-1">
-                <p className="font-bold text-lg">{post.name}</p>
+                <p className="font-bold text-lg dark:text-gray-400">
+                  {post.name}
+                </p>
                 <p className="text-sm text-gray-500 transition group-hover:transition group-hover:text-blue-400 truncate">
                   {post.url}
                 </p>
@@ -191,26 +193,48 @@ export const PostsLink = (props) => {
           <TagsLink post={post} />
         </li>
       ))}
+
       {deleteModal}
       <Modal
         classNames={{
           header: "mb-0",
-          overlay: "",
+          modal: "dark:bg-neutral-800",
+          title: "dark:text-gray-400",
         }}
         opened={editModalOpened}
         onClose={() => setEditModalOpened(isEditLoading ? true : false)}
         title="Edit Page"
         centered
       >
-        <p className="text-xs text-gray-500 mb-2">
+        <p className="text-xs text-gray-500 mb-2  ">
           *タイトルとタグの編集ができます。
         </p>
         <form
           className="flex flex-col gap-3"
           onSubmit={editForm.onSubmit(handleSubmit)}
         >
-          <TextInput label="Name" {...editForm.getInputProps("name")} />
+          <TextInput
+            classNames={{
+              defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700 ",
+              input: "dark:text-gray-300",
+              label: "dark:text-gray-300",
+            }}
+            label="Name"
+            {...editForm.getInputProps("name")}
+          />
           <MultiSelect
+            classNames={{
+              dropdown: "dark:bg-neutral-700 dark:border-neutral-700 ",
+              item: "dark:text-gray-200",
+              hovered: "dark:bg-neutral-500",
+              value: "bg-neutral-500 dark:text-gray-200",
+              searchInput: "dark:bg-neutral-700 ",
+              defaultValue: "dark:text-gray-200",
+              defaultValueRemove: "dark:text-gray-200",
+              defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700",
+              input: "dark:text-gray-300",
+              label: "dark:text-gray-300",
+            }}
             data={tagsSelectData}
             label="Tags"
             placeholder="Pick all that you like"

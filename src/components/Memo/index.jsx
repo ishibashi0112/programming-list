@@ -75,7 +75,7 @@ export const Memo = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 dark:bg-black">
       <div>
         {!isEdit ? (
           isEditLoading ? (
@@ -84,7 +84,7 @@ export const Memo = () => {
               <Overlay opacity={0} color="#000" />
             </div>
           ) : (
-            <div className="p-2">
+            <div className="p-2 dark:bg-neutral-900 dark:rounded-md">
               <Button
                 className="mr-2 "
                 variant="outline"
@@ -98,8 +98,12 @@ export const Memo = () => {
             </div>
           )
         ) : (
-          <div className="p-2">
-            <Button className="mr-2" variant="subtle" onClick={handleClickEdit}>
+          <div className="p-2 dark:bg-neutral-900 dark:rounded-md">
+            <Button
+              className="mr-2 dark:hover:bg-neutral-700"
+              variant="subtle"
+              onClick={handleClickEdit}
+            >
               <p>
                 <AiOutlineEdit />
               </p>
@@ -107,7 +111,7 @@ export const Memo = () => {
             </Button>
 
             <Button
-              className="relative"
+              className="relative dark:hover:bg-neutral-700"
               color={"red"}
               variant="subtle"
               onClick={handleClickRemove}
@@ -122,7 +126,19 @@ export const Memo = () => {
       </div>
 
       <RichTextEditor
-        className="mt-4 min-h-[300px]"
+        classNames={{
+          root: "mt-8 min-h-[300px] dark:bg-neutral-700	dark:border-neutral-700 dark:text-gray-300 ",
+          toolbar: "dark:bg-neutral-800	dark:border-neutral-800",
+          toolbarInner: "your-toolbarInner-class",
+          toolbarGroup: "your-toolbarGroup-class",
+          toolbarControl:
+            "dark:bg-neutral-600	dark:border-neutral-600 dark:text-gray-300",
+        }}
+        controls={[
+          ["bold", "h2", "italic", "underline", "strike"],
+          ["unorderedList", "orderedList"],
+          ["link", "codeBlock", "image"],
+        ]}
         value={text}
         onChange={setText}
         readOnly={isEdit}

@@ -46,10 +46,10 @@ export const useDeleteFetchModal = () => {
         classNames={{
           root: "your-root-class",
           inner: "your-inner-class",
-          modal: "w-60",
+          modal: "w-60 dark:bg-neutral-800",
           header: "justify-center",
           overlay: "",
-          title: "justify-center",
+          title: "justify-center dark:text-gray-300",
           body: "flex justify-center items-center",
           close: "your-close-class",
         }}

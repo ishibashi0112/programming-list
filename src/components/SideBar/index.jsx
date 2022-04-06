@@ -1,27 +1,100 @@
-import { Accordion } from "@mantine/core";
-import React from "react";
+import { Accordion, Burger, Drawer } from "@mantine/core";
+import React, { useState, useEffect } from "react";
 import { UrlItem } from "src/components/SideBar/UrlItem";
 import { MemoItem } from "src/components/SideBar/MemoItem";
+import { AiOutlineCopyrightCircle } from "react-icons/ai";
+import { useRouter } from "next/router";
 
 export const SideBar = () => {
-  return (
-    <div className="max-h-[calc(100vh-48px)]  w-1/5 border-r border-black">
-      <Accordion
-        classNames={{
-          content: "h-[70vh] overflow-y-auto",
-        }}
-        iconSize={18}
-        initialItem={0}
-        iconPosition="right"
-      >
-        <Accordion.Item label="URL">
-          <UrlItem />
-        </Accordion.Item>
+  const router = useRouter();
+  const [opened, setOpened] = useState(false);
+  useEffect(() => {
+    setOpened(false);
+  }, [router]);
 
-        <Accordion.Item label="Memo">
-          <MemoItem />
-        </Accordion.Item>
-      </Accordion>
-    </div>
+  return (
+    <>
+      <div className="block md:hidden">
+        <Burger
+          classNames={{
+            root: "fixed top-[10px] left-1 z-50 ",
+          }}
+          color={"gray"}
+          opened={opened}
+          onClick={() => setOpened((o) => !o)}
+          size="sm"
+        />
+        <Drawer
+          classNames={{
+            root: "mt-12",
+            overlay: "",
+            noOverlay: "your-noOverlay-class",
+            drawer: "mt-12 dark:bg-neutral-900",
+            header: "hidden",
+            title: "your-title-class",
+            closeButton: "your-closeButton-class",
+          }}
+          opened={opened}
+          onClose={() => setOpened(false)}
+          title="Register"
+          padding="xl"
+          size="70%"
+        >
+          <Accordion
+            classNames={{
+              control: "dark:hover:bg-neutral-700",
+              content: "max-h-[70vh] overflow-y-auto ",
+              label: "dark:text-gray-400",
+            }}
+            iconSize={18}
+            initialItem={0}
+            iconPosition="right"
+          >
+            <Accordion.Item label="URL">
+              <UrlItem />
+            </Accordion.Item>
+
+            <Accordion.Item label="Memo">
+              <MemoItem />
+            </Accordion.Item>
+          </Accordion>
+          <footer className="flex  justify-center items-center h-12 text-gray-500 text-sm">
+            <p className="flex items-center mr-1">
+              <AiOutlineCopyrightCircle />
+            </p>
+            <p>2022 yuki ishibashi</p>
+          </footer>
+        </Drawer>
+      </div>
+
+      <div className="hidden md:block ">
+        <div className="lg:w-1/5 w-[230px] bg-white fixed top-12 z-40 max-h-[calc(100vh-48px)] h-[calc(100vh-48px)]  flex flex-col justify-between border-r border-black dark:bg-neutral-900 ">
+          <Accordion
+            classNames={{
+              control: "dark:hover:bg-neutral-700 ",
+              content: "h-[70vh] overflow-y-auto ",
+              label: "dark:text-gray-400 ",
+            }}
+            iconSize={18}
+            initialItem={0}
+            iconPosition="right"
+          >
+            <Accordion.Item label="URL">
+              <UrlItem />
+            </Accordion.Item>
+
+            <Accordion.Item label="Memo">
+              <MemoItem />
+            </Accordion.Item>
+          </Accordion>
+          <footer className="flex justify-center items-center h-12 text-gray-500 text-sm">
+            <p className="flex items-center mr-1">
+              <AiOutlineCopyrightCircle />
+            </p>
+            <p>2022 yuki ishibashi</p>
+          </footer>
+        </div>
+      </div>
+    </>
   );
 };

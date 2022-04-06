@@ -109,7 +109,7 @@ export const UrlItem = () => {
   return (
     <>
       <Button
-        className="p-0"
+        className="p-0 dark:hover:bg-neutral-600"
         compact
         variant="subtle"
         onClick={handleClickNewFolder}
@@ -124,25 +124,28 @@ export const UrlItem = () => {
           <li
             className={`${
               router.query?.id === folder.id
-                ? "bg-gray-200"
-                : "hover:bg-gray-100"
-            } group flex justify-between px-2 rounded-sm transition hover:transition `}
+                ? "bg-gray-200 dark:bg-neutral-700"
+                : "hover:bg-gray-100 dark:hover:bg-neutral-800"
+            } group flex justify-between px-2 rounded-sm transition hover:transition  `}
             key={folder.id}
           >
             <Link
               href={{
                 pathname: `/posts/${folder.id}`,
-                query: { folderName: folder.name },
+                query: {
+                  folderName: folder.name,
+                  postsLength: folder.posts.length,
+                },
               }}
             >
               <a className="flex-1">
-                <p>{folder.name}</p>
+                <p className="dark:text-gray-400">{folder.name}</p>
               </a>
             </Link>
 
             <div className="flex justify-between items-center">
               <Button
-                className="hidden transition-all text-red-500 hover:bg-red-50 hover:transition-all group-hover:block"
+                className="hidden transition-all text-red-500 hover:bg-red-50 hover:transition-all group-hover:block dark:hover:bg-neutral-700"
                 variant="subtle"
                 compact
                 onClick={() => handleClickRemove(folder)}
@@ -156,7 +159,7 @@ export const UrlItem = () => {
                 </Tooltip>
               </Button>
               <Button
-                className="hidden transition-all hover:transition-all group-hover:block"
+                className="hidden transition-all hover:transition-all group-hover:block  dark:hover:bg-neutral-700"
                 variant="subtle"
                 compact
                 onClick={() => handleClickNewPost(folder)}
@@ -170,7 +173,9 @@ export const UrlItem = () => {
                 </Tooltip>
               </Button>
 
-              <p>{folder.posts.length ? folder.posts.length : null}</p>
+              <p className="dark:text-gray-400">
+                {folder.posts.length ? folder.posts.length : null}
+              </p>
             </div>
           </li>
         ))}
@@ -179,6 +184,11 @@ export const UrlItem = () => {
       {isAppendTextInput ? (
         <TextInput
           className="mb-2"
+          classNames={{
+            defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700 ",
+            input: "dark:text-gray-300",
+            label: "dark:text-gray-300",
+          }}
           sx={{ flex: 1 }}
           value={text}
           onChange={handleOnChange}

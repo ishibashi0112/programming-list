@@ -87,10 +87,22 @@ export const UrlForm = () => {
 
   return (
     <form
-      className="w-3/4 mx-auto mt-8 flex flex-col gap-3"
+      className="w-3/4 mx-auto my-8 flex flex-col gap-3"
       onSubmit={urlForm.onSubmit(handleSubmit)}
     >
       <Select
+        classNames={{
+          dropdown: "dark:bg-neutral-700 dark:border-neutral-700 ",
+          item: "dark:text-gray-200",
+          hovered: "dark:bg-neutral-500",
+          value: "bg-neutral-500 dark:text-gray-200",
+          searchInput: "dark:bg-neutral-700 ",
+          defaultValue: "dark:text-gray-200",
+          defaultValueRemove: "dark:text-gray-200",
+          defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700",
+          input: "dark:text-gray-300",
+          label: "dark:text-gray-300",
+        }}
         label="FOLDER"
         placeholder={
           router.query.folderName ? router.query.folderName : "folder"
@@ -104,18 +116,42 @@ export const UrlForm = () => {
         {...urlForm.getInputProps("folder_id")}
       />
       <TextInput
+        classNames={{
+          wrapper: "your-wrapper-class",
+          defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700 ",
+          input: "dark:text-gray-300",
+          label: "dark:text-gray-300",
+        }}
         placeholder="url"
         label="URL"
         required
         {...urlForm.getInputProps("url")}
       />
       <TextInput
+        classNames={{
+          wrapper: "your-wrapper-class",
+          defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700 ",
+          input: "dark:text-gray-300",
+          label: "dark:text-gray-300",
+        }}
         placeholder="name"
         label="NAME"
         required
         {...urlForm.getInputProps("name")}
       />
       <MultiSelect
+        classNames={{
+          dropdown: "dark:bg-neutral-700 dark:border-neutral-700 ",
+          item: "dark:text-gray-200",
+          hovered: "dark:bg-neutral-500",
+          value: "bg-neutral-500 dark:text-gray-200",
+          searchInput: "dark:bg-neutral-700 ",
+          defaultValue: "dark:text-gray-200",
+          defaultValueRemove: "dark:text-gray-200",
+          defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700",
+          input: "dark:text-gray-300",
+          label: "dark:text-gray-300",
+        }}
         data={tagsSelectData}
         label="TAG"
         placeholder="tag"
@@ -133,7 +169,7 @@ export const UrlForm = () => {
           <Loader color="gray" variant="dots" />
         </div>
       ) : (
-        <Button className="bg-gray-500" type="submit">
+        <Button className="bg-blue-400 " type="submit">
           Submit
         </Button>
       )}

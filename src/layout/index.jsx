@@ -6,7 +6,7 @@ const Layout = ({ children }) => {
   return (
     <div className="h-screen">
       <Header />
-      <div className="flex h-[calc(100%-48px)]">
+      <div className="w-full h-screen pt-12  dark:bg-black overflow-y-auto ">
         <SideBar />
         {children}
       </div>
