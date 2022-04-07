@@ -16,7 +16,7 @@ export const getServerSideProps = async (ctx) => {
 const Post = () => {
   return (
     <AuthCheak>
-      <div className="w-full md:w-[calc(100%-230px)] md:ml-auto lg:w-4/5">
+      <div className="w-full md:ml-auto md:w-[calc(100%-230px)] lg:w-4/5">
         <PostComponent />
       </div>
     </AuthCheak>

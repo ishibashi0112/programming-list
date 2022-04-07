@@ -16,7 +16,7 @@ export const getServerSideProps = async (ctx) => {
 const Memo = () => {
   return (
     <AuthCheak>
-      <div className="w-full h-full md:w-[calc(100%-230px)] md:ml-auto lg:w-4/5">
+      <div className="w-full h-full md:ml-auto md:w-[calc(100%-230px)] lg:w-4/5">
         <MemoComponent />
       </div>
     </AuthCheak>

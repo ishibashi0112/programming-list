@@ -30,7 +30,7 @@ export const Search = () => {
   return (
     <div className="flex flex-col items-center">
       <TextInput
-        className="w-full lg:w-4/5 rounded-b-none"
+        className="w-full rounded-b-none lg:w-4/5"
         classNames={{
           defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700 ",
           input: "dark:text-gray-300",

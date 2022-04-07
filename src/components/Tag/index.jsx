@@ -11,21 +11,21 @@ export const Tag = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full p-4 ">
-        <Skeleton className="h-7 w-24 mb-5" />
-        <div className="flex flex-wrap justify-center gap-3">
+      <div className="p-4 w-full ">
+        <Skeleton className="mb-5 w-24 h-7" />
+        <div className="flex flex-wrap gap-3 justify-center">
           <Skeleton
-            className="h-64 w-64 rounded-md"
+            className="w-64 h-64 rounded-md"
             sx={(theme) => ({
               backgroundColor: theme.colors.gray[6],
               // colorScheme === "dark" ? theme.colors.gray[6] : "",
             })}
           />
-          <Skeleton className="h-64 w-64 rounded-md" />
-          <Skeleton className="h-64 w-64 rounded-md" />
-          <Skeleton className="h-64 w-64 rounded-md opacity-70" />
-          <Skeleton className="h-64 w-64 rounded-md opacity-40" />
-          <Skeleton className="h-64 w-64 rounded-md opacity-10" />
+          <Skeleton className="w-64 h-64 rounded-md" />
+          <Skeleton className="w-64 h-64 rounded-md" />
+          <Skeleton className="w-64 h-64 rounded-md opacity-70" />
+          <Skeleton className="w-64 h-64 rounded-md opacity-40" />
+          <Skeleton className="w-64 h-64 rounded-md opacity-10" />
         </div>
       </div>
     );
@@ -37,7 +37,7 @@ export const Tag = () => {
   return (
     <div className="p-4 dark:bg-black">
       <h1 className="flex items-center py-1 px-3 dark:text-gray-400 dark:bg-neutral-900 dark:rounded-t-lg ">
-        <div className="flex items-center px-1 py-1 mr-1 text-white text-xl bg-gray-500 rounded-xl ">
+        <div className="flex items-center p-1 mr-1 text-xl text-white bg-gray-500 rounded-xl">
           <p className="flex items-center">
             <BsHash />
           </p>

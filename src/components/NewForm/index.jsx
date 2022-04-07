@@ -8,7 +8,7 @@ export const NewForm = () => {
   const router = useRouter();
 
   return (
-    <div className="w-full flex justify-center  ">
+    <div className="flex justify-center w-full  ">
       <Tabs
         classNames={{
           root: "w-5/6 mt-8  dark:bg-neutral-900 dark:rounded-xl dark:text-gray-400 ",

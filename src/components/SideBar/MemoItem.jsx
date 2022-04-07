@@ -50,7 +50,7 @@ export const MemoItem = () => {
             >
               <Link href={`/memos/${memo.id}`}>
                 <a>
-                  <p className="truncate dark:text-gray-400">
+                  <p className="dark:text-gray-400 truncate">
                     {memo.body.replace(/(<([^>]+)>)/gi, "")}
                   </p>
                   <p className="text-sm text-gray-500">

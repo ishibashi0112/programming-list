@@ -178,7 +178,7 @@ export const UrlItem = () => {
 
             <div className="flex justify-between items-center">
               <Button
-                className="hidden transition-all text-red-500 hover:bg-red-50 hover:transition-all group-hover:block dark:hover:bg-neutral-700"
+                className="hidden group-hover:block text-red-500 hover:bg-red-50 dark:hover:bg-neutral-700 transition-all hover:transition-all"
                 variant="subtle"
                 compact
                 onClick={() => handleClickRemove(folder)}
@@ -192,7 +192,7 @@ export const UrlItem = () => {
                 </Tooltip>
               </Button>
               <Button
-                className="hidden transition-all hover:transition-all group-hover:block  dark:hover:bg-neutral-700"
+                className="hidden group-hover:block dark:hover:bg-neutral-700 transition-all  hover:transition-all"
                 variant="subtle"
                 compact
                 onClick={() => handleClickNewPost(folder)}

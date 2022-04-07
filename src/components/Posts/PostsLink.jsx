@@ -141,10 +141,10 @@ export const PostsLink = (props) => {
   }, [tags]);
 
   return (
-    <ul className="flex flex-wrap justify-center gap-4 p-5 dark:bg-neutral-900 dark:rounded-b-lg ">
+    <ul className="flex flex-wrap gap-4 justify-center p-5 dark:bg-neutral-900 dark:rounded-b-lg ">
       {props.posts.map((post) => (
         <li
-          className="relative  w-64 h-64 border rounded-md shadow transition hover:transition hover:opacity-80 dark:border-black "
+          className="relative  w-64 h-64 rounded-md border dark:border-black shadow hover:opacity-80 transition hover:transition "
           key={post.id}
         >
           <Menu
@@ -178,11 +178,11 @@ export const PostsLink = (props) => {
 
           <Link href={post.url}>
             <a
-              className="block group"
+              className="group block"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <p className="flex-1 h-36  relative ">
+              <p className="relative flex-1  h-36 ">
                 <Image
                   className=" rounded-t-md"
                   src={"/images/noImage.png"}
@@ -191,10 +191,10 @@ export const PostsLink = (props) => {
                 />
               </p>
               <div className=" p-1">
-                <p className="font-bold text-lg dark:text-gray-400">
+                <p className="text-lg font-bold dark:text-gray-400">
                   {post.name}
                 </p>
-                <p className="text-sm text-gray-500 transition group-hover:transition group-hover:text-blue-400 truncate">
+                <p className="text-sm text-gray-500 group-hover:text-blue-400 truncate transition group-hover:transition">
                   {post.url}
                 </p>
               </div>
@@ -217,7 +217,7 @@ export const PostsLink = (props) => {
         title="Edit Page"
         centered
       >
-        <p className="text-xs text-gray-500 mb-2  ">
+        <p className="mb-2 text-xs text-gray-500  ">
           *タイトルとタグの編集ができます。
         </p>
         <form

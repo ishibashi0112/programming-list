@@ -14,10 +14,10 @@ export const Posts = () => {
 
   if (isLoading) {
     return (
-      <div className="w-full p-4  ">
+      <div className="p-4 w-full  ">
         <div className="py-1 px-3 dark:bg-neutral-900 dark:rounded-t-lg ">
-          <Skeleton className="h-7 w-24 mb-5 rounded-md" />
-          <div className="flex flex-wrap justify-center gap-4 p-5">
+          <Skeleton className="mb-5 w-24 h-7 rounded-md" />
+          <div className="flex flex-wrap gap-4 justify-center p-5">
             {skeletonEl.map((el) => el)}
           </div>
         </div>
@@ -30,7 +30,7 @@ export const Posts = () => {
 
   if (isEmpty) {
     return (
-      <div className="h-[calc(100vh-48px)] flex justify-center items-center opacity-50">
+      <div className="flex justify-center items-center h-[calc(100vh-48px)] opacity-50">
         <div className="flex text-2xl text-gray-500">
           <p className="flex items-center mr-1">
             <ImFileEmpty />
@@ -42,8 +42,8 @@ export const Posts = () => {
   }
 
   return (
-    <div className="w-full p-4">
-      <h1 className="flex items-center py-1 px-3  font-bold text-lg dark:text-gray-400 dark:bg-neutral-900 dark:rounded-t-lg  ">
+    <div className="p-4 w-full">
+      <h1 className="flex items-center py-1 px-3  text-lg font-bold dark:text-gray-400 dark:bg-neutral-900 dark:rounded-t-lg  ">
         <p className="flex items-center">
           <AiOutlineFolder />
         </p>

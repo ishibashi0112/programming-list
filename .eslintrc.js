@@ -7,6 +7,7 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
+    "plugin:tailwindcss/recommended",
     "prettier",
   ],
   parserOptions: {
@@ -16,7 +17,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  plugins: ["react"],
+  plugins: ["react", "tailwindcss"],
   rules: {
     "react/prop-types": "off",
     "jsx-a11y/no-autofocus": "off",

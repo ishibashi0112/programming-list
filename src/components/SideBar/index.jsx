@@ -58,7 +58,7 @@ export const SideBar = () => {
               <MemoItem />
             </Accordion.Item>
           </Accordion>
-          <footer className="flex  justify-center items-center h-12 text-gray-500 text-sm">
+          <footer className="flex  justify-center items-center h-12 text-sm text-gray-500">
             <p className="flex items-center mr-1">
               <AiOutlineCopyrightCircle />
             </p>
@@ -68,7 +68,7 @@ export const SideBar = () => {
       </div>
 
       <div className="hidden md:block ">
-        <div className="lg:w-1/5 w-[230px] bg-white fixed top-12 z-40 max-h-[calc(100vh-48px)] h-[calc(100vh-48px)]  flex flex-col justify-between border-r border-black dark:bg-neutral-900 ">
+        <div className="flex fixed top-12 z-40 flex-col justify-between w-[230px] h-[calc(100vh-48px)]  max-h-[calc(100vh-48px)] bg-white dark:bg-neutral-900 border-r border-black lg:w-1/5 ">
           <Accordion
             classNames={{
               control: "dark:hover:bg-neutral-700 ",
@@ -87,7 +87,7 @@ export const SideBar = () => {
               <MemoItem />
             </Accordion.Item>
           </Accordion>
-          <footer className="flex justify-center items-center h-12 text-gray-500 text-sm">
+          <footer className="flex justify-center items-center h-12 text-sm text-gray-500">
             <p className="flex items-center mr-1">
               <AiOutlineCopyrightCircle />
             </p>

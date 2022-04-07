@@ -84,10 +84,10 @@ export const Memo = () => {
     return (
       <div className="p-4">
         <div className="flex p-2">
-          <Skeleton className="h-9 w-24 mr-2" />
-          <Skeleton className="h-9 w-24" />
+          <Skeleton className="mr-2 w-24 h-9" />
+          <Skeleton className="w-24 h-9" />
         </div>
-        <Skeleton className="h-[300px] mt-4  " />
+        <Skeleton className="mt-4 h-[300px]  " />
       </div>
     );
   }

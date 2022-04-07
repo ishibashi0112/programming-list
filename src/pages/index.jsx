@@ -53,7 +53,7 @@ const Home = (props) => {
   return (
     // <SWRConfig value={{ fallback }}>
     <AuthCheak>
-      <div className="w-full  md:w-[calc(100%-230px)] md:ml-auto lg:w-4/5 dark:bg-black">
+      <div className="w-full  dark:bg-black md:ml-auto md:w-[calc(100%-230px)] lg:w-4/5">
         <NewForm />
       </div>
     </AuthCheak>

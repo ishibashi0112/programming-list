@@ -57,7 +57,7 @@ export const MemoForm = () => {
   );
 
   return (
-    <form className="w-full px-2" onSubmit={memoForm.onSubmit(handleSubmit)}>
+    <form className="px-2 w-full" onSubmit={memoForm.onSubmit(handleSubmit)}>
       <RichTextEditor
         classNames={{
           root: "mt-8 min-h-[300px] dark:bg-neutral-700	dark:border-neutral-700 dark:text-gray-300 ",
@@ -80,7 +80,7 @@ export const MemoForm = () => {
           <Overlay opacity={0} color="#000" />
         </div>
       ) : (
-        <Button className=" w-full mt-4 mb-10 bg-blue-400  " type="submit">
+        <Button className=" mt-4 mb-10 w-full bg-blue-400  " type="submit">
           Submit
         </Button>
       )}

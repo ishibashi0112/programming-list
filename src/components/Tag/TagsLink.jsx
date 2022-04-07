@@ -19,7 +19,7 @@ export const TagsLink = (props) => {
         <ul className="flex flex-wrap gap-1 px-1" ref={ref}>
           {props.post.tags.map((tag) => (
             <li
-              className="bg-gray-500 text-white px-1 py-[0.1rem] rounded-xl text-sm hover:border-blue-400 hover:bg-blue-400 active:opacity-70"
+              className="py-[0.1rem] px-1 text-sm text-white bg-gray-500 hover:bg-blue-400 rounded-xl hover:border-blue-400 active:opacity-70"
               key={tag.id}
             >
               <Link
@@ -62,7 +62,7 @@ export const TagsLink = (props) => {
           <ul className={"flex flex-wrap gap-1 px-1 "}>
             {props.post.tags.map((tag) => (
               <li
-                className="bg-gray-500 text-white px-1 py-[0.1rem] rounded-xl text-sm hover:border-blue-400 hover:bg-blue-400 active:opacity-70"
+                className="py-[0.1rem] px-1 text-sm text-white bg-gray-500 hover:bg-blue-400 rounded-xl hover:border-blue-400 active:opacity-70"
                 key={tag.id}
               >
                 <Link

@@ -11,7 +11,7 @@ export const useCreateSkeletonEl = (quantiy) => {
       for (let i = 0; i < quantiy; i++) {
         elements = [
           ...elements,
-          <Skeleton className="h-64 w-64 rounded-md" key={`skeltonEl${i}`} />,
+          <Skeleton className="w-64 h-64 rounded-md" key={`skeltonEl${i}`} />,
         ];
       }
       setSkeletonEl(elements);

@@ -94,7 +94,7 @@ export const UrlForm = () => {
 
   return (
     <form
-      className="w-3/4 mx-auto my-8 flex flex-col gap-3"
+      className="flex flex-col gap-3 my-8 mx-auto w-3/4"
       onSubmit={urlForm.onSubmit(handleSubmit)}
     >
       <Select

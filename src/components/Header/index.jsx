@@ -48,10 +48,10 @@ export const Header = () => {
 
   if (router.pathname !== "/auth/signin") {
     return (
-      <header className="fixed top-0 z-40 w-full h-12 flex items-center justify-between px-4 border-b border-black bg-white dark:bg-neutral-900">
+      <header className="flex fixed top-0 z-40 justify-between items-center px-4 w-full h-12 bg-white dark:bg-neutral-900 border-b border-black">
         <Link href="/">
           <a>
-            <h1 className="text-2xl font-bold ml-6 md:ml-0 dark:text-gray-50">
+            <h1 className="ml-6 text-2xl font-bold dark:text-gray-50 md:ml-0">
               PRG List
             </h1>
           </a>
@@ -76,7 +76,7 @@ export const Header = () => {
 
           <div className="hidden sm:block">
             <button
-              className="flex justify-between items-center h-9 w-64 mr-5  border rounded-md text-gray-500 transition hover:transition hover:opacity-70 dark:border-black  dark:bg-neutral-700"
+              className="flex justify-between items-center mr-5 w-64 h-9  text-gray-500 dark:bg-neutral-700 rounded-md border dark:border-black hover:opacity-70 transition  hover:transition"
               onClick={handleClickSeacrh}
             >
               <div className="flex items-center">
@@ -86,14 +86,14 @@ export const Header = () => {
                 <p>Search</p>
               </div>
 
-              <div className="flex h-2/3 mr-2  ">
+              <div className="flex mr-2 h-2/3  ">
                 <Kbd>⌘</Kbd> + <Kbd>K</Kbd>
               </div>
             </button>
           </div>
 
           <ActionIcon
-            className="mr-5 border border-sky-900 dark:border-yellow-300 dark:hover:bg-neutral-700"
+            className="mr-5 dark:hover:bg-neutral-700 border border-sky-900 dark:border-yellow-300"
             size="lg"
             onClick={handleChangeColorScheme}
           >
@@ -121,17 +121,17 @@ export const Header = () => {
           >
             <Menu.Label>User Data</Menu.Label>
             <MenuItem>
-              <p className="text-gray-500   text-xs">Name</p>
+              <p className="text-xs   text-gray-500">Name</p>
               <p className="text-sm dark:text-gray-400">{session?.user.name}</p>
-              <p className="text-gray-500 text-xs">Email</p>
-              <p className="w-44 break-words dark:text-gray-400">
+              <p className="text-xs text-gray-500">Email</p>
+              <p className="w-44 dark:text-gray-400 break-words">
                 {session?.user.email}
               </p>
             </MenuItem>
             <Divider className="dark:border-neutral-600" />
 
             <Menu.Item
-              className="transition hover:transition hover:bg-red-50 dark:hover:bg-neutral-700"
+              className="hover:bg-red-50 dark:hover:bg-neutral-700 transition hover:transition"
               icon={<VscSignOut />}
               color={"red"}
               onClick={handleClickSignOut}
@@ -147,7 +147,7 @@ export const Header = () => {
   }
 
   return (
-    <header className="fixed top-0 z-40 w-full h-12 flex items-center px-4 border-b border-black bg-white dark:bg-neutral-900">
+    <header className="flex fixed top-0 z-40 items-center px-4 w-full h-12 bg-white dark:bg-neutral-900 border-b border-black">
       <h1 className="text-2xl font-bold dark:text-gray-50">PRG List</h1>
     </header>
   );
