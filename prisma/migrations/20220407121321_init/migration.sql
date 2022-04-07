@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE `Memo` MODIFY `body` LONGTEXT NOT NULL;
+
+-- AlterTable
+ALTER TABLE `Post` MODIFY `url` MEDIUMTEXT NOT NULL;

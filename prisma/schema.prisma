@@ -64,18 +64,21 @@ model Folder {
 }
 
 model Memo {
-  id      String @id @default(cuid())
-  body    String
-  user_id String
-  user    User   @relation(fields: [user_id], references: [id])
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  body      String   @db.LongText
+  user_id   String
+  user      User     @relation(fields: [user_id], references: [id])
 
 }
 
 model Post {
   id        String   @id @default(cuid())
   name      String
-  url       String
+  url       String   @db.MediumText
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   tags      Tag[]    @relation("_PostsOnTags")
   folder_id String
   folder    Folder   @relation(fields: [folder_id], references: [id])

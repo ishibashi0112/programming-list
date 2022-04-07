@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useCallback } from "react";
 import { useMemos } from "src/hooks/useMemos";
 import { AiOutlineFileAdd } from "react-icons/ai";
+import * as dayjs from "dayjs";
 
 export const MemoItem = () => {
   const router = useRouter();
@@ -52,7 +53,9 @@ export const MemoItem = () => {
                   <p className="truncate dark:text-gray-400">
                     {memo.body.replace(/(<([^>]+)>)/gi, "")}
                   </p>
-                  <p className="text-sm text-gray-500">2022年3月31日 13:00</p>
+                  <p className="text-sm text-gray-500">
+                    {dayjs(memo.updatedAt).format(`YYYY年MM月D日 HH:mm`)}
+                  </p>
                 </a>
               </Link>
             </li>
