@@ -1,6 +1,6 @@
 import Link from "next/link";
-import React, { useEffect, useCallback, useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import React, { useEffect, useCallback } from "react";
+import { useSession, signOut } from "next-auth/react";
 import {
   ActionIcon,
   Avatar,
@@ -46,7 +46,7 @@ export const Header = () => {
     }
   }, [colorScheme]);
 
-  if (session) {
+  if (router.pathname !== "/auth/signin") {
     return (
       <header className="fixed top-0 z-40 w-full h-12 flex items-center justify-between px-4 border-b border-black bg-white dark:bg-neutral-900">
         <Link href="/">
@@ -147,8 +147,8 @@ export const Header = () => {
   }
 
   return (
-    <header className="fixed top-0 z-40 w-full h-12 flex items-center justify-center px-4 border-b border-black bg-white">
-      <h1 className="text-2xl font-bold">Prgramming List</h1>
+    <header className="fixed top-0 z-40 w-full h-12 flex items-center px-4 border-b border-black bg-white dark:bg-neutral-900">
+      <h1 className="text-2xl font-bold dark:text-gray-50">PRG List</h1>
     </header>
   );
 };

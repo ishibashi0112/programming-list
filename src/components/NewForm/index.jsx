@@ -11,7 +11,7 @@ export const NewForm = () => {
     <div className="w-full flex justify-center  ">
       <Tabs
         classNames={{
-          root: "w-5/6 mt-8 px-2 dark:bg-neutral-900 dark:rounded-xl dark:text-gray-400 ",
+          root: "w-5/6 mt-8  dark:bg-neutral-900 dark:rounded-xl dark:text-gray-400 ",
           tabInner: "dark:text-gray-400 ",
           tabActive: "dark:bg-neutral-800 dark:rounded-t-md",
         }}

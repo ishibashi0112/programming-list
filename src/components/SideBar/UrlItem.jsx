@@ -11,6 +11,25 @@ import { useDeleteFetchModal } from "src/hooks/useDeleteFetchModal";
 import { useFolders } from "src/hooks/useFolders";
 import { useSWRConfig } from "swr";
 
+const createFolder = async (value) => {
+  const folderName = { name: value };
+  const params = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(folderName),
+  };
+  const res = await fetch("/api/folders/createFolder", params);
+
+  if (!res.ok) {
+    return new Error(`code:${res.status} ${res.statusText}`);
+  }
+
+  const json = await res.json();
+  return json;
+};
+
 export const UrlItem = () => {
   const router = useRouter();
   const [text, setText] = useState("");
@@ -24,21 +43,6 @@ export const UrlItem = () => {
   const { deleteModal, setDeleteModalData, setIsModalOpened } =
     useDeleteFetchModal();
 
-  const createFolder = async (value) => {
-    const folderName = { name: value };
-    const params = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(folderName),
-    };
-    const res = await fetch("/api/folders/createFolder", params);
-    const json = await res.json();
-    console.log(json);
-    await mutate("/api/folders/findAllFolder");
-  };
-
   const handleClickNewFolder = useCallback(() => {
     setIsAppendTextInput(true);
   }, []);
@@ -50,21 +54,50 @@ export const UrlItem = () => {
   const handleOnBlur = useCallback(async (e) => {
     const value = e.target.value;
     if (value) {
+      try {
+        setIsAppendTextInput(false);
+        setNewFolderLoading(true);
+        const newFolder = await createFolder(value);
+
+        if (newFolder instanceof Error) {
+          throw newFolder;
+        }
+
+        await mutate("/api/folders/findAllFolder");
+      } catch (error) {
+        notifications(
+          "フォルダーの作成時にエラーが発生しました。",
+          error.message
+        );
+      } finally {
+        setNewFolderLoading(false);
+      }
+    } else {
       setIsAppendTextInput(false);
-      setNewFolderLoading(true);
-      await createFolder(value);
-      setNewFolderLoading(false);
     }
-    setIsAppendTextInput(false);
   }, []);
 
   const handleKeyDown = useCallback(async (e) => {
     const value = e.target.value;
     if (e.keyCode === 13 && value) {
-      setIsAppendTextInput(false);
-      setNewFolderLoading(true);
-      await createFolder(value);
-      setNewFolderLoading(false);
+      try {
+        setIsAppendTextInput(false);
+        setNewFolderLoading(true);
+        const newFolder = await createFolder(value);
+
+        if (newFolder instanceof Error) {
+          throw newFolder;
+        }
+
+        await mutate("/api/folders/findAllFolder");
+      } catch (error) {
+        notifications(
+          "フォルダーの作成時にエラーが発生しました。",
+          error.message
+        );
+      } finally {
+        setNewFolderLoading(false);
+      }
     } else if (e.keyCode === 13 && !value) {
       setIsAppendTextInput(false);
     }

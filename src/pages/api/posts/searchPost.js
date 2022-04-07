@@ -25,5 +25,6 @@ export default async (req, res) => {
     res.json(posts);
   } else {
     res.status(401);
+    res.end();
   }
 };

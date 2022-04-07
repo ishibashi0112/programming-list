@@ -83,42 +83,53 @@ export const PostsLink = (props) => {
 
   const handleSubmit = useCallback(
     async (value) => {
-      setIsEditLoading(true);
-      console.log(value);
-      const prevTags = value.post.tags.map((tag) => tag.name);
-      const newTags = value.tags;
+      try {
+        setIsEditLoading(true);
+        const prevTags = value.post.tags.map((tag) => tag.name);
+        const newTags = value.tags;
 
-      const updateTags = newTags.filter((newTag) => !prevTags.includes(newTag));
-      const deleteTags = prevTags.filter(
-        (prevTag) => !newTags.includes(prevTag)
-      );
+        const updateTags = newTags.filter(
+          (newTag) => !prevTags.includes(newTag)
+        );
+        const deleteTags = prevTags.filter(
+          (prevTag) => !newTags.includes(prevTag)
+        );
 
-      const bodyParams = {
-        post_id: value.post.id,
-        name: value.name,
-        updateTags,
-        deleteTags,
-      };
+        const bodyParams = {
+          post_id: value.post.id,
+          name: value.name,
+          updateTags,
+          deleteTags,
+        };
 
-      const params = {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bodyParams),
-      };
+        const params = {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bodyParams),
+        };
 
-      await fetch("/api/posts/updatePost", params);
-      await mutate("/api/findAllTag");
-      if (router.pathname === "/posts/[id]") {
-        await mutate(`/api/posts/findPost?folder_id=${router.query.id}`);
+        const res = await fetch("/api/posts/updatePost", params);
+
+        if (!res.ok) {
+          throw new Error(`code:${res.status} ${res.statusText}`);
+        }
+
+        await mutate("/api/tags/findAllTag");
+
+        if (router.pathname === "/posts/[id]") {
+          await mutate(`/api/posts/findPost?folder_id=${router.query.id}`);
+        }
+        if (router.pathname === "/tags/[id]") {
+          await mutate(`/api/posts/findPost?tag_id=${router.query.id}`);
+        }
+      } catch (error) {
+        notifications("削除時にエラーが発生しました。", error.message);
+      } finally {
+        setIsEditLoading(false);
+        setEditModalOpened(false);
       }
-      if (router.pathname === "/tags/[id]") {
-        await mutate(`/api/posts/findPost?tag_id=${router.query.id}`);
-      }
-
-      setIsEditLoading(false);
-      setEditModalOpened(false);
     },
     [router]
   );

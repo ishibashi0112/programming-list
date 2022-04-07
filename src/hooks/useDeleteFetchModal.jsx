@@ -14,26 +14,37 @@ export const useDeleteFetchModal = () => {
     Object.keys(deleteModalData).length ? deleteModalData : {};
 
   const deleteFecth = useCallback(async () => {
-    setIsLoading(true);
-    const bodyParams = { data: fetchData };
+    try {
+      setIsLoading(true);
+      const bodyParams = { data: fetchData };
 
-    const params = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(bodyParams),
-    };
-    await fetch(apiUrl, params);
-    await Promise.all(
-      mutateUrls.map(async (url) => {
-        await mutate(url);
-      })
-    );
-    setIsModalOpened(false);
-    setIsLoading(false);
-    if (redirectUrl) {
-      router.push(redirectUrl);
+      const params = {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyParams),
+      };
+      const res = await fetch(apiUrl, params);
+
+      if (!res.ok) {
+        throw new Error(`code:${res.status} ${res.statusText}`);
+      }
+
+      await Promise.all(
+        mutateUrls.map(async (url) => {
+          await mutate(url);
+        })
+      );
+
+      if (redirectUrl) {
+        router.push(redirectUrl);
+      }
+    } catch (error) {
+      notifications("削除時にエラーが発生しました。", error.message);
+    } finally {
+      setIsModalOpened(false);
+      setIsLoading(false);
     }
   }, [router, fetchData, apiUrl, mutateUrls, redirectUrl]);
 

@@ -12,5 +12,6 @@ export default async (req, res) => {
     res.json(memos);
   } else {
     res.status(401);
+    res.end();
   }
 };

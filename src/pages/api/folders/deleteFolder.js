@@ -36,5 +36,6 @@ export default async (req, res) => {
     res.end();
   } else {
     res.status(401);
+    res.end();
   }
 };

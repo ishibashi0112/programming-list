@@ -1,11 +1,4 @@
-import {
-  TextInput,
-  MultiSelect,
-  Select,
-  Button,
-  Tabs,
-  Loader,
-} from "@mantine/core";
+import { TextInput, MultiSelect, Select, Button, Loader } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
@@ -14,6 +7,7 @@ import { useFolders } from "src/hooks/useFolders";
 import { useTags } from "src/hooks/useTags";
 import { urlValidate } from "src/utils/varidate";
 import { mutate } from "swr";
+import { notifications } from "src/utils/notification";
 
 const createPost = async (value) => {
   const params = {
@@ -25,8 +19,12 @@ const createPost = async (value) => {
   };
 
   const res = await fetch("/api/posts/createPost", params);
+
+  if (!res.ok) {
+    return new Error(`code:${res.status} ${res.statusText}`);
+  }
+
   const json = await res.json();
-  console.log(json);
   return json;
 };
 
@@ -52,7 +50,7 @@ export const UrlForm = () => {
     },
   });
 
-  const newTag = useCallback((query) => {
+  const newTagLabel = useCallback((query) => {
     return `+ New Tag ${query}`;
   }, []);
 
@@ -62,14 +60,23 @@ export const UrlForm = () => {
 
   const handleSubmit = useCallback(
     async (values) => {
-      setIsSubmitLoading(true);
-      const newPost = await createPost(values);
-      console.log(newPost.folder_id);
-      await mutate("/api/folders/findAllFolder");
-      await mutate("/api/findAllTag");
-      // await mutate(`/api/posts/findPost?folder_id=${newPost.folder_id}`);
-      urlForm.reset();
-      setIsSubmitLoading(false);
+      try {
+        setIsSubmitLoading(true);
+        const newPost = await createPost(values);
+
+        if (newPost instanceof Error) {
+          throw newPost;
+        }
+
+        await mutate("/api/folders/findAllFolder");
+        await mutate("/api/tags/findAllTag");
+        // await mutate(`/api/posts/findPost?folder_id=${newPost.folder_id}`);
+        urlForm.reset();
+      } catch (error) {
+        notifications("Url保存時にエラーが発生しました。", error.message);
+      } finally {
+        setIsSubmitLoading(false);
+      }
     },
     [urlForm]
   );
@@ -160,7 +167,7 @@ export const UrlForm = () => {
         creatable
         clearable
         nothingFound="Nothing found"
-        getCreateLabel={newTag}
+        getCreateLabel={newTagLabel}
         onCreate={handleOnCreate}
         {...urlForm.getInputProps("tags")}
       />

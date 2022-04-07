@@ -4,6 +4,7 @@ import React, { useCallback, useState } from "react";
 import { mutate } from "swr";
 import RichTextEditor from "src/components/RichTextEditorImport";
 import { useRouter } from "next/router";
+import { notifications } from "src/utils/notification";
 
 const createMemo = async (value) => {
   const params = {
@@ -15,8 +16,12 @@ const createMemo = async (value) => {
   };
 
   const res = await fetch("/api/memos/createMemo", params);
+
+  if (!res.ok) {
+    return new Error(`code:${res.status} ${res.statusText}`);
+  }
+
   const json = await res.json();
-  console.log(json);
   return json;
 };
 
@@ -29,21 +34,30 @@ export const MemoForm = () => {
 
   const handleSubmit = useCallback(
     async (values) => {
-      //空と空行のみは処理をスルー
+      //空と空行のみだけの場合は処理をスルー
       if (values.memo.replace(/(<([^>]+)>)/gi, "")) {
-        setIsSubmitLoading(true);
-        const newMemo = await createMemo(values);
-        await mutate("/api/memos/findAllMemo");
-        memoForm.reset();
-        setIsSubmitLoading(false);
-        router.push(`/memos/${newMemo.id}`);
+        try {
+          setIsSubmitLoading(true);
+          const newMemo = await createMemo(values);
+
+          if (newMemo instanceof Error) {
+            throw newMemo;
+          }
+
+          await mutate("/api/memos/findAllMemo");
+          router.push(`/memos/${newMemo.id}`);
+        } catch (error) {
+          notifications("メモの作成時にエラーが発生しました。", error.message);
+        } finally {
+          setIsSubmitLoading(false);
+        }
       }
     },
-    [memoForm, router]
+    [router]
   );
 
   return (
-    <form className="w-full" onSubmit={memoForm.onSubmit(handleSubmit)}>
+    <form className="w-full px-2" onSubmit={memoForm.onSubmit(handleSubmit)}>
       <RichTextEditor
         classNames={{
           root: "mt-8 min-h-[300px] dark:bg-neutral-700	dark:border-neutral-700 dark:text-gray-300 ",

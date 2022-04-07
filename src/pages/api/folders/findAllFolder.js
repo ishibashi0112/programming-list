@@ -15,5 +15,6 @@ export default async (req, res) => {
     res.json(folder);
   } else {
     res.status(401);
+    res.end();
   }
 };

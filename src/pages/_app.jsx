@@ -2,22 +2,25 @@ import Head from "next/head";
 import React from "react";
 import { SessionProvider } from "next-auth/react";
 import "tailwindcss/tailwind.css";
-import { AuthCheak } from "src/components/AuthCheak";
+import { MantineProvider } from "@mantine/core";
+import { NotificationsProvider } from "@mantine/notifications";
 
 const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
   const getLayout = Component.getLayout || ((page) => page);
   return (
     <SessionProvider session={session}>
-      {/* <AuthCheak> */}
-      {getLayout(
-        <>
-          <Head>
-            <title>Create Next App</title>
-          </Head>
-          <Component {...pageProps} />
-        </>
-      )}
-      {/* </AuthCheak> */}
+      <MantineProvider>
+        <NotificationsProvider position="top-right" autoClose={3000}>
+          {getLayout(
+            <>
+              <Head>
+                <title>PRG List</title>
+              </Head>
+              <Component {...pageProps} />
+            </>
+          )}
+        </NotificationsProvider>
+      </MantineProvider>
     </SessionProvider>
   );
 };

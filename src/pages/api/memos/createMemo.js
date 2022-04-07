@@ -11,8 +11,10 @@ export default async (req, res) => {
         body: req.body.memo,
       },
     });
+
     res.json(memo);
   } else {
     res.status(401);
+    res.end();
   }
 };

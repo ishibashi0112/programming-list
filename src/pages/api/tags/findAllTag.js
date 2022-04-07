@@ -12,5 +12,6 @@ export default async (req, res) => {
     res.json(Tags);
   } else {
     res.status(401);
+    res.end();
   }
 };

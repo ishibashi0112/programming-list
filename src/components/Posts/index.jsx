@@ -1,12 +1,11 @@
 import { Skeleton } from "@mantine/core";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { usePostsByFolderId } from "src/hooks/usePostsByFolderId";
 import { AiOutlineFolder } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { PostsLink } from "src/components/Posts/PostsLink";
 import { ImFileEmpty } from "react-icons/im";
 import { useCreateSkeletonEl } from "src/hooks/useCreateSkeletonEl";
-import { useLocalStorage } from "@mantine/hooks";
 
 export const Posts = () => {
   const router = useRouter();

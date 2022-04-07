@@ -1,5 +1,7 @@
-import { getSession } from "next-auth/react";
-import React from "react";
+import { getSession, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { AuthCheak } from "src/components/AuthCheak";
 import { NewForm } from "src/components/NewForm";
 import Layout from "src/layout";
 import { fetcher } from "src/utils/fetcher";
@@ -37,15 +39,24 @@ import { SWRConfig } from "swr";
 //   };
 // };
 
+export const getServerSideProps = async (ctx) => {
+  const session = await getSession(ctx);
+  return {
+    props: {
+      session,
+    },
+  };
+};
+
 const Home = (props) => {
   // const { fallback } = props;
-  // console.log(fallback);
   return (
     // <SWRConfig value={{ fallback }}>
-
-    <div className="w-full  md:w-[calc(100%-230px)] md:ml-auto lg:w-4/5 dark:bg-black">
-      <NewForm />
-    </div>
+    <AuthCheak>
+      <div className="w-full  md:w-[calc(100%-230px)] md:ml-auto lg:w-4/5 dark:bg-black">
+        <NewForm />
+      </div>
+    </AuthCheak>
     // </SWRConfig>
   );
 };
