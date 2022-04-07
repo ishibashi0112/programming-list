@@ -7,6 +7,25 @@ import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { useSWRConfig } from "swr";
 import { useDeleteFetchModal } from "src/hooks/useDeleteFetchModal";
 
+const updateMemo = async (id, text) => {
+  const memoParams = { id: id, body: text };
+  const params = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(memoParams),
+  };
+  const res = await fetch("/api/memos/updateMemo", params);
+
+  if (!res.ok) {
+    return new Error(`code:${res.status} ${res.statusText}`);
+  }
+
+  const json = await res.json();
+  return json;
+};
+
 export const Memo = () => {
   const router = useRouter();
   const { mutate } = useSWRConfig();
@@ -27,19 +46,21 @@ export const Memo = () => {
   }, [memo]);
 
   const handleClickSave = useCallback(async () => {
-    setIsEditLoading(true);
-    const memoParams = { id: router.query.id, body: text };
-    const params = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(memoParams),
-    };
-    await fetch("/api/memos/updateMemo", params);
-    await mutate("/api/memos/findAllMemo");
-    setIsEdit(true);
-    setIsEditLoading(false);
+    try {
+      setIsEditLoading(true);
+      const res = await updateMemo(router.query.id, text);
+
+      if (res instanceof Error) {
+        throw res;
+      }
+
+      await mutate("/api/memos/findAllMemo");
+      setIsEdit(true);
+    } catch (error) {
+      notifications("メモの編集時にエラーが発生しました。", error.message);
+    } finally {
+      setIsEditLoading(false);
+    }
   }, [router, text]);
 
   const handleClickRemove = useCallback(async () => {
