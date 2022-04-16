@@ -16,52 +16,37 @@ import { useTags } from "src/hooks/useTags";
 import { useDeleteFetchModal } from "src/hooks/useDeleteFetchModal";
 import { mutate } from "swr";
 import { useRouter } from "next/router";
-
-const tagsArray = (tags) => {
-  const results = tags.map((tag) => tag.name);
-  return results;
-};
+import { BsFolderSymlink } from "react-icons/bs";
+import { useMoveFolderModal } from "src/hooks/useMoveFolderModal";
+import { useEditModal } from "src/hooks/useEditModal";
 
 export const PostsLink = (props) => {
   const router = useRouter();
-  console.log(router.query.id);
-  const [editModalOpened, setEditModalOpened] = useState(false);
-  const [isEditLoading, setIsEditLoading] = useState(false);
-  const { data: tags } = useTags();
-  console.log();
-  const [tagsSelectData, setTagsSelectData] = useState([]);
+
   const {
     deleteModal,
     setDeleteModalData,
     setIsModalOpened: setIsDeleteModalOpened,
   } = useDeleteFetchModal();
-  const editForm = useForm({
-    initialValues: {
-      post: "",
-      name: "",
-      tags: [],
-    },
-  });
 
-  const newTagLabel = useCallback((query) => {
-    return `+ New Tag ${query}`;
+  const { moveFolderModal, setPost, setIsMoveFolderModalOpened } =
+    useMoveFolderModal();
+
+  const {
+    editModal,
+    setPost: setEditPost,
+    setIsEditModalOpened,
+  } = useEditModal();
+
+  const handleClickMoveFolder = useCallback((post) => {
+    setPost(post);
+    setIsMoveFolderModalOpened(true);
   }, []);
 
-  const handleCreateTag = useCallback((query) => {
-    setTagsSelectData((prev) => [...prev, query]);
+  const handleClickEdit = useCallback((post) => {
+    setEditPost(post);
+    setIsEditModalOpened(true);
   }, []);
-
-  const handleClickEdit = useCallback(
-    (post) => {
-      editForm.setValues({
-        post,
-        name: post.name,
-        tags: tagsArray(post.tags),
-      });
-      setEditModalOpened(true);
-    },
-    [editForm]
-  );
 
   const handleClickRemove = useCallback(
     (post) => {
@@ -81,70 +66,11 @@ export const PostsLink = (props) => {
     [router]
   );
 
-  const handleSubmit = useCallback(
-    async (value) => {
-      try {
-        setIsEditLoading(true);
-        const prevTags = value.post.tags.map((tag) => tag.name);
-        const newTags = value.tags;
-
-        const updateTags = newTags.filter(
-          (newTag) => !prevTags.includes(newTag)
-        );
-        const deleteTags = prevTags.filter(
-          (prevTag) => !newTags.includes(prevTag)
-        );
-
-        const bodyParams = {
-          post_id: value.post.id,
-          name: value.name,
-          updateTags,
-          deleteTags,
-        };
-
-        const params = {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(bodyParams),
-        };
-
-        const res = await fetch("/api/posts/updatePost", params);
-
-        if (!res.ok) {
-          throw new Error(`code:${res.status} ${res.statusText}`);
-        }
-
-        await mutate("/api/tags/findAllTag");
-
-        if (router.pathname === "/posts/[id]") {
-          await mutate(`/api/posts/findPost?folder_id=${router.query.id}`);
-        }
-        if (router.pathname === "/tags/[id]") {
-          await mutate(`/api/posts/findPost?tag_id=${router.query.id}`);
-        }
-      } catch (error) {
-        notifications("削除時にエラーが発生しました。", error.message);
-      } finally {
-        setIsEditLoading(false);
-        setEditModalOpened(false);
-      }
-    },
-    [router]
-  );
-
-  useEffect(() => {
-    if (tags) {
-      setTagsSelectData(tagsArray(tags));
-    }
-  }, [tags]);
-
   return (
     <ul className="flex flex-wrap gap-4 justify-center p-5 dark:bg-neutral-900 dark:rounded-b-lg ">
       {props.posts.map((post) => (
         <li
-          className="relative  w-64 h-64 rounded-md border dark:border-black shadow hover:opacity-80 transition hover:transition "
+          className="relative  w-64 h-64 dark:bg-neutral-700 rounded-md border dark:border-0 shadow hover:opacity-80 transition hover:transition "
           key={post.id}
         >
           <Menu
@@ -160,6 +86,14 @@ export const PostsLink = (props) => {
             gutter={3}
           >
             <Menu.Label>menu</Menu.Label>
+            <Menu.Item
+              className="font-bold text-blue-400 hover:bg-sky-50 dark:hover:bg-neutral-700"
+              icon={<BsFolderSymlink />}
+              onClick={() => handleClickMoveFolder(post)}
+            >
+              folder
+            </Menu.Item>
+
             <Menu.Item
               className="font-bold text-blue-400 hover:bg-sky-50 dark:hover:bg-neutral-700"
               icon={<AiOutlineEdit />}
@@ -178,26 +112,22 @@ export const PostsLink = (props) => {
 
           <Link href={post.url}>
             <a
-              className="group block"
+              className="group block "
               target="_blank"
               rel="noopener noreferrer"
             >
               <p className="relative flex-1  h-36 ">
                 <Image
                   className=" rounded-t-md"
-                  src={"/images/noImage.png"}
+                  src={post.image_url ? post.image_url : "/images/noImage.png"}
                   alt="Picture of the author"
                   layout="fill"
                 />
               </p>
-              <div className=" p-1">
-                <p className="text-lg font-bold dark:text-gray-400">
-                  {post.name}
-                </p>
-                <p className="text-sm text-gray-500 group-hover:text-blue-400 truncate transition group-hover:transition">
-                  {post.url}
-                </p>
-              </div>
+
+              <p className="overflow-hidden px-1 h-[84px] text-lg font-bold dark:text-gray-400">
+                {post.name}
+              </p>
             </a>
           </Link>
 
@@ -205,69 +135,11 @@ export const PostsLink = (props) => {
         </li>
       ))}
 
+      {moveFolderModal}
+
+      {editModal}
+
       {deleteModal}
-      <Modal
-        classNames={{
-          header: "mb-0",
-          modal: "dark:bg-neutral-800",
-          title: "dark:text-gray-400",
-        }}
-        opened={editModalOpened}
-        onClose={() => setEditModalOpened(isEditLoading ? true : false)}
-        title="Edit Page"
-        centered
-      >
-        <p className="mb-2 text-xs text-gray-500  ">
-          *タイトルとタグの編集ができます。
-        </p>
-        <form
-          className="flex flex-col gap-3"
-          onSubmit={editForm.onSubmit(handleSubmit)}
-        >
-          <TextInput
-            classNames={{
-              defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700 ",
-              input: "dark:text-gray-300",
-              label: "dark:text-gray-300",
-            }}
-            label="Name"
-            {...editForm.getInputProps("name")}
-          />
-          <MultiSelect
-            classNames={{
-              dropdown: "dark:bg-neutral-700 dark:border-neutral-700 ",
-              item: "dark:text-gray-200",
-              hovered: "dark:bg-neutral-500",
-              value: "bg-neutral-500 dark:text-gray-200",
-              searchInput: "dark:bg-neutral-700 ",
-              defaultValue: "dark:text-gray-200",
-              defaultValueRemove: "dark:text-gray-200",
-              defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700",
-              input: "dark:text-gray-300",
-              label: "dark:text-gray-300",
-            }}
-            data={tagsSelectData}
-            label="Tags"
-            placeholder="Pick all that you like"
-            searchable
-            nothingFound
-            clearable
-            creatable
-            onCreate={handleCreateTag}
-            getCreateLabel={newTagLabel}
-            {...editForm.getInputProps("tags")}
-          />
-          {isEditLoading ? (
-            <div className="flex justify-center mt-3">
-              <Loader color="gray" variant="dots" />
-            </div>
-          ) : (
-            <Button className="mt-3 bg-blue-400 " type="submit">
-              save
-            </Button>
-          )}
-        </form>
-      </Modal>
     </ul>
   );
 };

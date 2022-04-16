@@ -23,4 +23,9 @@ module.exports = {
     "jsx-a11y/no-autofocus": "off",
     "jsx-a11y/anchor-is-valid": "off",
   },
+  settings: {
+    tailwindcss: {
+      callees: ["classnames", "clsx", "ctl"],
+    },
+  },
 };

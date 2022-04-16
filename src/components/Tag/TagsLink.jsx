@@ -10,11 +10,15 @@ export const TagsLink = (props) => {
   const { ref, height } = useElementSize();
 
   if (props.post.tags.length === 0) {
-    return <div className="text-sm text-gray-500">No Tag</div>;
+    return (
+      <div className="text-sm text-gray-500 dark:text-gray-400 dark:bg-neutral-700">
+        No Tag
+      </div>
+    );
   }
 
   return (
-    <div>
+    <div className="dark:py-1 dark:bg-neutral-700 dark:rounded-b-lg">
       {height < 24 ? (
         <ul className="flex flex-wrap gap-1 px-1" ref={ref}>
           {props.post.tags.map((tag) => (

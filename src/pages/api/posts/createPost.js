@@ -17,6 +17,7 @@ export default async (req, res) => {
     data: {
       user_id: session.userId,
       folder_id: req.body.folder_id,
+      image_url: req.body.image_url,
       url: req.body.url,
       name: req.body.name,
       tags: {

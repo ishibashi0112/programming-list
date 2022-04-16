@@ -1,7 +1,14 @@
-import { TextInput, MultiSelect, Select, Button, Loader } from "@mantine/core";
+import {
+  TextInput,
+  MultiSelect,
+  Select,
+  Button,
+  Loader,
+  Overlay,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useRouter } from "next/router";
-import React, { useEffect, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { BsHash } from "react-icons/bs";
 import { useFolders } from "src/hooks/useFolders";
 import { useTags } from "src/hooks/useTags";
@@ -34,6 +41,8 @@ export const UrlForm = () => {
   const { data: tags } = useTags();
   const [tagsSelectData, setTagsSelectData] = useState([]);
   const [isSubmitLoading, setIsSubmitLoading] = useState(false);
+  const [isGetTitleAndImageLoading, setIsGetTitleAndImageLoading] =
+    useState(false);
   const foldersSerectData = folders
     ? folders.map((folder) => ({ value: folder.id, label: folder.name }))
     : [];
@@ -43,6 +52,7 @@ export const UrlForm = () => {
       folder_id: "",
       url: "",
       name: "",
+      image_url: "",
       tags: [],
     },
     validate: {
@@ -61,8 +71,10 @@ export const UrlForm = () => {
   const handleSubmit = useCallback(
     async (values) => {
       try {
+        console.log(values);
         setIsSubmitLoading(true);
         const newPost = await createPost(values);
+        console.log(newPost);
 
         if (newPost instanceof Error) {
           throw newPost;
@@ -70,7 +82,6 @@ export const UrlForm = () => {
 
         await mutate("/api/folders/findAllFolder");
         await mutate("/api/tags/findAllTag");
-        // await mutate(`/api/posts/findPost?folder_id=${newPost.folder_id}`);
         urlForm.reset();
       } catch (error) {
         notifications("Url保存時にエラーが発生しました。", error.message);
@@ -91,6 +102,30 @@ export const UrlForm = () => {
     const tagsNameArray = tags ? tags.map((tag) => tag.name) : [];
     setTagsSelectData(tagsNameArray);
   }, [tags]);
+
+  const handleGetTitleAndImage = useCallback(async () => {
+    try {
+      setIsGetTitleAndImageLoading(true);
+      const url = urlForm.values.url;
+
+      const res = await fetch(`http://127.0.0.1:8000?url=${url}`, {
+        mode: "cors",
+      });
+
+      if (!res.ok) {
+        throw new Error(`code:${res.status} ${res.statusText}`);
+      }
+
+      const json = await res.json();
+
+      urlForm.setFieldValue("name", json.title);
+      urlForm.setFieldValue("image_url", json.image);
+    } catch (error) {
+      notifications("titleの読み込みでエラーが発生しました。", error.message);
+    } finally {
+      setIsGetTitleAndImageLoading(false);
+    }
+  }, [urlForm]);
 
   return (
     <form
@@ -124,19 +159,37 @@ export const UrlForm = () => {
       />
       <TextInput
         classNames={{
-          wrapper: "your-wrapper-class",
           defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700 ",
-          input: "dark:text-gray-300",
+          input: " dark:text-gray-300 pr-20",
+          rightSection: "w-20",
           label: "dark:text-gray-300",
         }}
         placeholder="url"
         label="URL"
         required
+        rightSection={
+          isGetTitleAndImageLoading ? (
+            <Loader color="gray" size={"xs"} />
+          ) : (
+            <Button
+              className="dark:hover:bg-neutral-600"
+              variant="subtle"
+              compact
+              onClick={handleGetTitleAndImage}
+            >
+              title補完
+            </Button>
+          )
+        }
         {...urlForm.getInputProps("url")}
       />
+
+      {isGetTitleAndImageLoading && (
+        <Overlay opacity={0} color="#000" zIndex={70} />
+      )}
+
       <TextInput
         classNames={{
-          wrapper: "your-wrapper-class",
           defaultVariant: "dark:bg-neutral-700 dark:border-neutral-700 ",
           input: "dark:text-gray-300",
           label: "dark:text-gray-300",
@@ -171,6 +224,9 @@ export const UrlForm = () => {
         onCreate={handleOnCreate}
         {...urlForm.getInputProps("tags")}
       />
+
+      <input type="hidden" {...urlForm.getInputProps("image")} />
+
       {isSubmitLoading ? (
         <div className="flex justify-center mt-4">
           <Loader color="gray" variant="dots" />
