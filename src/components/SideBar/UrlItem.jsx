@@ -1,4 +1,11 @@
-import { Button, Loader, Skeleton, TextInput, Tooltip } from "@mantine/core";
+import {
+  Accordion,
+  Button,
+  Loader,
+  Skeleton,
+  TextInput,
+  Tooltip,
+} from "@mantine/core";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useCallback } from "react";
@@ -38,7 +45,6 @@ export const UrlItem = () => {
   const { mutate } = useSWRConfig();
 
   const { data: folders, error, isLoading } = useFolders();
-  console.log(folders);
 
   const { deleteModal, setDeleteModalData, setIsModalOpened } =
     useDeleteFetchModal();
@@ -154,6 +160,7 @@ export const UrlItem = () => {
 
       <ul>
         {folders.map((folder) => (
+          // <Accordion.Item key={folder.id} label={folder.name}>
           <li
             className={`${
               router.query?.id === folder.id

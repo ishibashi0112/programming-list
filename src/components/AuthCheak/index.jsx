@@ -14,8 +14,8 @@ export const AuthCheak = ({ children }) => {
 
   if (!session) {
     return (
-      <div className="flex justify-center w-96 ml-auto mt-5">
-        <Overlay className="opacity-0 z-[60]" />
+      <div className="flex justify-center mt-5 ml-auto w-96">
+        <Overlay className="z-[60] opacity-0" />
         <Alert
           classNames={{
             root: "z-[70] dark:bg-neutral-800",

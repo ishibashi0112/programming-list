@@ -82,6 +82,7 @@ export const useMoveFolderModal = () => {
         <p className="mb-2 text-xs text-gray-500  ">
           *移動先のフォルダを選んでください
         </p>
+        <p>{post?.name}</p>
         <form
           className="flex flex-col gap-3"
           onSubmit={moveFolderForm.onSubmit(handleSubmit)}

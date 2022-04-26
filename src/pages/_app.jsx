@@ -7,6 +7,7 @@ import { NotificationsProvider } from "@mantine/notifications";
 
 const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
   const getLayout = Component.getLayout || ((page) => page);
+
   return (
     <SessionProvider session={session}>
       <MantineProvider>

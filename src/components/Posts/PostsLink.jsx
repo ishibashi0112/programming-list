@@ -1,20 +1,10 @@
 import Link from "next/link";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { TagsLink } from "src/components/Tag/TagsLink";
 import Image from "next/image";
-import {
-  Button,
-  Loader,
-  Menu,
-  Modal,
-  MultiSelect,
-  TextInput,
-} from "@mantine/core";
+import { Menu } from "@mantine/core";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
-import { useForm } from "@mantine/form";
-import { useTags } from "src/hooks/useTags";
 import { useDeleteFetchModal } from "src/hooks/useDeleteFetchModal";
-import { mutate } from "swr";
 import { useRouter } from "next/router";
 import { BsFolderSymlink } from "react-icons/bs";
 import { useMoveFolderModal } from "src/hooks/useMoveFolderModal";
@@ -117,12 +107,16 @@ export const PostsLink = (props) => {
               rel="noopener noreferrer"
             >
               <p className="relative flex-1  h-36 ">
-                <Image
+                {/* <Image
                   className=" rounded-t-md"
                   src={post.image_url ? post.image_url : "/images/noImage.png"}
                   alt="Picture of the author"
                   layout="fill"
-                />
+                /> */}
+                <img
+                  alt=""
+                  src={post.image_url ? post.image_url : "/images/noImage.png"}
+                ></img>
               </p>
 
               <p className="overflow-hidden px-1 h-[84px] text-lg font-bold dark:text-gray-400">
