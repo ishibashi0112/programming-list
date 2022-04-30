@@ -31,8 +31,6 @@ export const RectDrawing = forwardRef(function ForwardRefFunc(props, ref) {
     ref.current.addEventListener("mouseup", handleMouseUp);
   }, []);
 
-  console.log(mouseX - center.left);
-
   if (router.pathname !== "/") {
     return (
       <div

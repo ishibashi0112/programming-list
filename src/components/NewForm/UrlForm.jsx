@@ -108,7 +108,10 @@ export const UrlForm = () => {
       setIsGetTitleAndImageLoading(true);
       const url = urlForm.values.url;
 
-      const res = await fetch(`http://127.0.0.1:8000?url=${url}`, {
+      // const res = await fetch(`http://127.0.0.1:8000?url=${url}`, {
+      //   mode: "cors",
+      // });
+      const res = await fetch(`https://wjlr53.deta.dev?url=${url}`, {
         mode: "cors",
       });
 
