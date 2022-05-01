@@ -1,4 +1,4 @@
-import { Button, Popover } from "@mantine/core";
+import { Badge, Button, Popover } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import Link from "next/link";
 import React from "react";
@@ -22,10 +22,7 @@ export const TagsLink = (props) => {
       {height < 24 ? (
         <ul className="flex flex-wrap gap-1 px-1" ref={ref}>
           {props.post.tags.map((tag) => (
-            <li
-              className="py-[0.1rem] px-1 text-sm text-white bg-gray-500 hover:bg-blue-400 rounded-xl hover:border-blue-400 active:opacity-70"
-              key={tag.id}
-            >
+            <li key={tag.id}>
               <Link
                 href={{
                   pathname: `/tags/${tag.id}`,
@@ -33,10 +30,14 @@ export const TagsLink = (props) => {
                 }}
               >
                 <a className="flex">
-                  <p className="flex items-center">
-                    <BsHash />
-                  </p>
-                  <p className="pr-1 max-w-[200px] truncate">{tag.name}</p>
+                  <Badge
+                    className="normal-case	hover:bg-blue-400 hover:border-blue-400 active:opacity-70"
+                    leftSection={<BsHash />}
+                    color="gray"
+                    variant="filled"
+                  >
+                    {tag.name}
+                  </Badge>
                 </a>
               </Link>
             </li>
@@ -55,6 +56,7 @@ export const TagsLink = (props) => {
               onClick={() => setOpened((o) => !o)}
               color={"dark"}
               variant="subtle"
+              compact
             >
               ...タグを全て表示
             </Button>
@@ -65,10 +67,7 @@ export const TagsLink = (props) => {
         >
           <ul className={"flex flex-wrap gap-1 px-1 "}>
             {props.post.tags.map((tag) => (
-              <li
-                className="py-[0.1rem] px-1 text-sm text-white bg-gray-500 hover:bg-blue-400 rounded-xl hover:border-blue-400 active:opacity-70"
-                key={tag.id}
-              >
+              <li key={tag.id}>
                 <Link
                   href={{
                     pathname: `/tags/${tag.id}`,
@@ -76,10 +75,14 @@ export const TagsLink = (props) => {
                   }}
                 >
                   <a className="flex">
-                    <p className="flex items-center">
-                      <BsHash />
-                    </p>
-                    <p className="pr-1 max-w-[200px] truncate">{tag.name}</p>
+                    <Badge
+                      className="normal-case	hover:bg-blue-400 hover:border-blue-400 active:opacity-70"
+                      color="gray"
+                      leftSection={<BsHash />}
+                      variant="filled"
+                    >
+                      {tag.name}
+                    </Badge>
                   </a>
                 </Link>
               </li>

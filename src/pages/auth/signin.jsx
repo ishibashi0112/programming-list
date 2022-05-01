@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { getProviders, getSession, signIn, useSession } from "next-auth/react";
+import React, { useState } from "react";
+import { getProviders, signIn } from "next-auth/react";
 import { Header } from "src/components/Header";
 import { Button, LoadingOverlay } from "@mantine/core";
 import { BsGithub, BsGoogle } from "react-icons/bs";
-import { useRouter } from "next/router";
 
 export async function getServerSideProps() {
   const providers = await getProviders();
@@ -13,9 +12,7 @@ export async function getServerSideProps() {
 }
 
 const SignIn = ({ providers }) => {
-  const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const handleSignIn = async (provider) => {
     setIsLoading(true);
@@ -26,21 +23,21 @@ const SignIn = ({ providers }) => {
     <div>
       <Header />
 
-      <div className="flex flex-col item-center  h-[300px] mx-auto mt-24 w-96 border rounded-md shadow-md">
-        <h1 className="font-bold text-2xl flex  justify-center my-10">
+      <div className="flex flex-col mx-auto  mt-24 w-96 h-[300px] rounded-md border shadow-md item-center">
+        <h1 className="flex justify-center my-10  text-2xl font-bold">
           Sign In
         </h1>
         <LoadingOverlay visible={isLoading} />
-        <ul className="flex flex-col items-center justify-center gap-3">
+        <ul className="flex flex-col gap-3 justify-center items-center">
           {Object.values(providers).map((provider) => (
             <li key={provider.name}>
               <Button
-                className="bg-gray-500 w-80"
+                className="w-80 bg-gray-500"
                 color="gray"
                 disabled={isLoading}
                 onClick={() => handleSignIn(provider)}
               >
-                <p className="text-xl mr-4">
+                <p className="mr-4 text-xl">
                   {provider.name === "Google" && <BsGoogle />}
                   {provider.name === "GitHub" && <BsGithub />}
                 </p>

@@ -1,8 +1,7 @@
 import Link from "next/link";
 import React, { useCallback } from "react";
 import { TagsLink } from "src/components/Tag/TagsLink";
-import Image from "next/image";
-import { Menu } from "@mantine/core";
+import { Menu, SimpleGrid, Stack } from "@mantine/core";
 import { AiOutlineDelete, AiOutlineEdit } from "react-icons/ai";
 import { useDeleteFetchModal } from "src/hooks/useDeleteFetchModal";
 import { useRouter } from "next/router";
@@ -56,84 +55,171 @@ export const PostsLink = (props) => {
     [router]
   );
 
-  return (
-    <ul className="flex flex-wrap gap-4 justify-center p-5 dark:bg-neutral-900 dark:rounded-b-lg ">
-      {props.posts.map((post) => (
-        <li
-          className="relative  w-64 h-64 dark:bg-neutral-700 rounded-md border dark:border-0 shadow hover:opacity-80 transition hover:transition "
-          key={post.id}
+  if (props.display === "grid") {
+    return (
+      <ul className="flex  justify-center p-5 dark:bg-neutral-900 dark:rounded-b-lg ">
+        <SimpleGrid
+          cols={4}
+          breakpoints={[
+            { maxWidth: 1380, cols: 3, spacing: "md" },
+            { maxWidth: 1060, cols: 2, spacing: "sm" },
+            { maxWidth: 820, cols: 1, spacing: "sm" },
+          ]}
         >
-          <Menu
-            classNames={{
-              root: "absolute top-0  right-0  z-10 rounded-full ",
-              label: "p-1 ",
-              item: "p-2",
-              body: "dark:bg-neutral-800 dark:border-black",
-            }}
-            position="bottom"
-            placement="end"
-            size={"xs"}
-            gutter={3}
-          >
-            <Menu.Label>menu</Menu.Label>
-            <Menu.Item
-              className="font-bold text-blue-400 hover:bg-sky-50 dark:hover:bg-neutral-700"
-              icon={<BsFolderSymlink />}
-              onClick={() => handleClickMoveFolder(post)}
+          {props.posts.map((post) => (
+            <li
+              className="relative  w-64 h-64 dark:bg-neutral-700 rounded-md border dark:border-0 shadow hover:opacity-80 transition hover:transition "
+              key={post.id}
             >
-              folder
-            </Menu.Item>
+              <Menu
+                classNames={{
+                  root: "absolute top-0  right-0  z-10 rounded-full ",
+                  label: "p-1 ",
+                  item: "p-2",
+                  body: "dark:bg-neutral-800 dark:border-black",
+                }}
+                position="bottom"
+                placement="end"
+                size={"xs"}
+                gutter={3}
+              >
+                <Menu.Label>menu</Menu.Label>
+                <Menu.Item
+                  className="font-bold text-blue-400 hover:bg-sky-50 dark:hover:bg-neutral-700"
+                  icon={<BsFolderSymlink />}
+                  onClick={() => handleClickMoveFolder(post)}
+                >
+                  folder
+                </Menu.Item>
 
-            <Menu.Item
-              className="font-bold text-blue-400 hover:bg-sky-50 dark:hover:bg-neutral-700"
-              icon={<AiOutlineEdit />}
-              onClick={() => handleClickEdit(post)}
+                <Menu.Item
+                  className="font-bold text-blue-400 hover:bg-sky-50 dark:hover:bg-neutral-700"
+                  icon={<AiOutlineEdit />}
+                  onClick={() => handleClickEdit(post)}
+                >
+                  edit
+                </Menu.Item>
+                <Menu.Item
+                  className="font-bold text-red-400 hover:bg-red-50 dark:hover:bg-neutral-700"
+                  icon={<AiOutlineDelete />}
+                  onClick={() => handleClickRemove(post)}
+                >
+                  remove
+                </Menu.Item>
+              </Menu>
+
+              <Link href={post.url}>
+                <a
+                  className="group block "
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <p className="relative flex-1  h-36 ">
+                    <img
+                      className="w-full h-full rounded-t-md"
+                      alt="noimage"
+                      src={
+                        post.image_url ? post.image_url : "/images/noImage.png"
+                      }
+                    />
+                  </p>
+
+                  <p className="overflow-hidden px-1 h-[84px] text-lg font-bold dark:text-gray-400">
+                    {post.name}
+                  </p>
+                </a>
+              </Link>
+
+              <TagsLink post={post} />
+            </li>
+          ))}
+        </SimpleGrid>
+
+        {moveFolderModal}
+
+        {editModal}
+
+        {deleteModal}
+      </ul>
+    );
+  }
+  if (props.display === "list") {
+    return (
+      <ul className="flex  justify-center p-5 dark:bg-neutral-900 dark:rounded-b-lg ">
+        <Stack justify="flex-start" spacing="sm">
+          {props.posts.map((post) => (
+            <li
+              className="flex relative h-[90px] dark:bg-neutral-700 rounded-md border dark:border-0 shadow hover:opacity-80 transition hover:transition "
+              key={post.id}
             >
-              edit
-            </Menu.Item>
-            <Menu.Item
-              className="font-bold text-red-400 hover:bg-red-50 dark:hover:bg-neutral-700"
-              icon={<AiOutlineDelete />}
-              onClick={() => handleClickRemove(post)}
-            >
-              remove
-            </Menu.Item>
-          </Menu>
+              <Menu
+                classNames={{
+                  root: "absolute top-0  right-0  z-10 rounded-full ",
+                  label: "p-1 ",
+                  item: "p-2",
+                  body: "dark:bg-neutral-800 dark:border-black",
+                }}
+                position="bottom"
+                placement="end"
+                size={"xs"}
+                gutter={3}
+              >
+                <Menu.Label>menu</Menu.Label>
+                <Menu.Item
+                  className="font-bold text-blue-400 hover:bg-sky-50 dark:hover:bg-neutral-700"
+                  icon={<BsFolderSymlink />}
+                  onClick={() => handleClickMoveFolder(post)}
+                >
+                  folder
+                </Menu.Item>
 
-          <Link href={post.url}>
-            <a
-              className="group block "
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <p className="relative flex-1  h-36 ">
-                {/* <Image
-                  className=" rounded-t-md"
-                  src={post.image_url ? post.image_url : "/images/noImage.png"}
-                  alt="Picture of the author"
-                  layout="fill"
-                /> */}
-                <img
-                  alt=""
-                  src={post.image_url ? post.image_url : "/images/noImage.png"}
-                ></img>
-              </p>
+                <Menu.Item
+                  className="font-bold text-blue-400 hover:bg-sky-50 dark:hover:bg-neutral-700"
+                  icon={<AiOutlineEdit />}
+                  onClick={() => handleClickEdit(post)}
+                >
+                  edit
+                </Menu.Item>
+                <Menu.Item
+                  className="font-bold text-red-400 hover:bg-red-50 dark:hover:bg-neutral-700"
+                  icon={<AiOutlineDelete />}
+                  onClick={() => handleClickRemove(post)}
+                >
+                  remove
+                </Menu.Item>
+              </Menu>
 
-              <p className="overflow-hidden px-1 h-[84px] text-lg font-bold dark:text-gray-400">
-                {post.name}
-              </p>
-            </a>
-          </Link>
+              <Link href={post.url}>
+                <a
+                  className="group flex  "
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    className="block w-32 h-full rounded-l-md"
+                    alt="noimage"
+                    src={
+                      post.image_url ? post.image_url : "/images/noImage.png"
+                    }
+                  />
+                  <div className="flex flex-col justify-between py-1">
+                    <p className="overflow-hidden px-1  text-lg font-bold dark:text-gray-400">
+                      {post.name}
+                    </p>
+                    <TagsLink post={post} />
+                  </div>
+                </a>
+              </Link>
+            </li>
+          ))}
+        </Stack>
+        {moveFolderModal}
 
-          <TagsLink post={post} />
-        </li>
-      ))}
+        {editModal}
 
-      {moveFolderModal}
-
-      {editModal}
-
-      {deleteModal}
-    </ul>
-  );
+        {deleteModal}
+      </ul>
+    );
+  }
+  return <></>;
 };
