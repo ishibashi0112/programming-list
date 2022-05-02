@@ -16,6 +16,10 @@ export default async (req, res) => {
       where: {
         folder_id: forderId,
       },
+      orderBy: {
+        updatedAt: "asc",
+      },
+
       include: { tags: true },
     });
 
@@ -26,6 +30,9 @@ export default async (req, res) => {
       where: {
         user_id: session.userId,
         tags: { some: { id: { equals: tagId } } },
+      },
+      orderBy: {
+        updatedAt: "asc",
       },
       include: { tags: true },
     });

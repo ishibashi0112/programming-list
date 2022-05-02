@@ -1,24 +1,36 @@
-import { SegmentedControl, Skeleton } from "@mantine/core";
-import React, { useState } from "react";
+import { Skeleton } from "@mantine/core";
+import React, { useState, useEffect } from "react";
 import { usePostsByFolderId } from "src/hooks/usePostsByFolderId";
-import { AiOutlineFolder, AiOutlineUnorderedList } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { PostsLink } from "src/components/Posts/PostsLink";
 import { ImFileEmpty } from "react-icons/im";
 import { useCreateSkeletonEl } from "src/hooks/useCreateSkeletonEl";
-import { BsGrid3X3Gap } from "react-icons/bs";
 import { useLocalStorage } from "@mantine/hooks";
+import { DisplayBar } from "../DisplayBar";
 
 export const Posts = () => {
   const router = useRouter();
-  const { data: posts, error, isLoading, isEmpty } = usePostsByFolderId();
+  const { data, error, isLoading, isEmpty } = usePostsByFolderId();
   const { skeletonEl } = useCreateSkeletonEl(router.query.postsLength);
-  const [display, setDisplay] = useLocalStorage({
+
+  const [posts, setPosts] = useState([]);
+  const [display] = useLocalStorage({
     key: "display",
-    defaultValue: "grid",
   });
 
-  if (isLoading) {
+  useEffect(() => {
+    setPosts(data);
+  }, [data]);
+
+  useEffect(() => {
+    // if (display.time === "up") {
+    const copyArray = [...posts];
+    const reverseTimePosts = copyArray.reverse();
+    setPosts(reverseTimePosts);
+    // }
+  }, [display.time]);
+
+  if (isLoading || posts?.length === undefined) {
     return (
       <div className="p-4 w-full  ">
         <div className="py-1 px-3 dark:bg-neutral-900 dark:rounded-t-lg ">
@@ -49,35 +61,10 @@ export const Posts = () => {
 
   return (
     <div className="p-4 w-full">
-      <div className="flex">
-        <h1 className="flex items-center py-1 px-3  text-lg font-bold dark:text-gray-400 dark:bg-neutral-900 dark:rounded-t-lg  ">
-          <p className="flex items-center ">
-            <AiOutlineFolder />
-          </p>
-          <p className=" pr-1">{router.query?.folderName}</p>
-
-          <p className=""> {`${posts.length}件`}</p>
-        </h1>
-        <SegmentedControl
-          classNames={{
-            control: "flex items-center",
-            label: "px-3 py-[7px]",
-          }}
-          color="gray"
-          data={[
-            {
-              value: "grid",
-              label: <BsGrid3X3Gap />,
-            },
-            {
-              value: "list",
-              label: <AiOutlineUnorderedList />,
-            },
-          ]}
-          value={display}
-          onChange={setDisplay}
-        />
-      </div>
+      <DisplayBar
+        posts={{ defaultPosts: data, currentPosts: posts }}
+        setPosts={setPosts}
+      />
 
       <PostsLink posts={posts} display={display} />
     </div>

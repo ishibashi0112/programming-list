@@ -62,7 +62,7 @@ export const TagsLink = (props) => {
             </Button>
           }
           width={260}
-          position="bottom"
+          position="top"
           withArrow
         >
           <ul className={"flex flex-wrap gap-1 px-1 "}>
