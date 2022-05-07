@@ -35,8 +35,8 @@ export const Header = () => {
   }, []);
 
   const handleChangeColorScheme = useCallback(() => {
-    setColorScheme((current) => (current === "dark" ? "light" : "dark"));
-  }, []);
+    setColorScheme(colorScheme === "dark" ? "light" : "dark");
+  }, [colorScheme]);
 
   useEffect(() => {
     if (colorScheme === "dark") {
@@ -106,15 +106,8 @@ export const Header = () => {
 
           <Menu
             classNames={{
-              root: "your-root-class",
               label: "px-1 py-0 ",
-              item: "",
               body: "dark:bg-neutral-800 dark:border-black",
-              itemHovered: "your-itemHovered-class",
-              itemInner: "your-itemInner-class",
-              itemBody: "your-itemBody-class",
-              itemIcon: "your-itemIcon-class",
-              itemLabel: "",
               arrow: "your-arrow-class",
             }}
             control={<Avatar src={session?.user.image} radius="xl" />}

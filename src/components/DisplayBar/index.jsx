@@ -19,20 +19,16 @@ import { BiFilterAlt } from "react-icons/bi";
 
 export const DisplayBar = (props) => {
   const router = useRouter();
-  // const [display, setDisplay] = useLocalStorage({
-  //   key: "display",
-  //   defaultValue: "grid",
-  // });
-  const [display, setDisplay] = useLocalStorage({
-    key: "display",
-    defaultValue: { format: "grid", time: "down" },
-  });
 
-  // const [timeSort, setTimeSort] = useState("down");
-  const [timeSort, setTimeSort] = useLocalStorage({
+  const [format, setFormat] = useLocalStorage({
+    key: "format",
+    defaultValue: "grid",
+  });
+  const [time, setTime] = useLocalStorage({
     key: "time",
     defaultValue: "down",
   });
+  console.log(format, time);
 
   const [searchFilterState, setSearchFilterState] = useState({
     isOpened: false,
@@ -123,11 +119,10 @@ export const DisplayBar = (props) => {
                 label: <AiOutlineUnorderedList />,
               },
             ]}
-            value={display.format}
-            // onChange={setDisplay}
-            onChange={(value) =>
-              setDisplay((prev) => ({ ...prev, format: value }))
-            }
+            value={format}
+            onChange={(value) => {
+              setFormat(value);
+            }}
           />
 
           <SegmentedControl
@@ -147,10 +142,8 @@ export const DisplayBar = (props) => {
                 label: <BsSortNumericUp />,
               },
             ]}
-            value={display.time}
-            onChange={(value) =>
-              setDisplay((prev) => ({ ...prev, time: value }))
-            }
+            value={time}
+            onChange={(value) => setTime(value)}
           />
 
           <Popover
@@ -244,8 +237,8 @@ export const DisplayBar = (props) => {
                 label: <AiOutlineUnorderedList />,
               },
             ]}
-            value={display}
-            onChange={setDisplay}
+            value={format}
+            onChange={(value) => setFormat(value)}
           />
 
           <SegmentedControl
@@ -265,8 +258,8 @@ export const DisplayBar = (props) => {
                 label: <BsSortNumericUp />,
               },
             ]}
-            value={timeSort}
-            onChange={setTimeSort}
+            value={time}
+            onChange={(value) => setTime(value)}
           />
 
           <TextInput

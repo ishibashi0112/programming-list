@@ -10,7 +10,7 @@ const MyApp = ({ Component, pageProps: { session, ...pageProps } }) => {
 
   return (
     <SessionProvider session={session}>
-      <MantineProvider>
+      <MantineProvider withGlobalStyles withNormalizeCSS>
         <NotificationsProvider position="top-right" autoClose={7000}>
           {getLayout(
             <>

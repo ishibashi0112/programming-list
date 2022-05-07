@@ -8,8 +8,11 @@ import { useLocalStorage } from "@mantine/hooks";
 export const Tag = () => {
   const { data, error, isLoading } = usePostsByTagId();
   const [posts, setPosts] = useState([]);
-  const [display] = useLocalStorage({
-    key: "display",
+  const [format] = useLocalStorage({
+    key: "format",
+  });
+  const [time] = useLocalStorage({
+    key: "time",
   });
 
   useEffect(() => {
@@ -17,12 +20,10 @@ export const Tag = () => {
   }, [data]);
 
   useEffect(() => {
-    // if (display.time === "up") {
     const copyArray = [...posts];
     const reverseTimePosts = copyArray.reverse();
     setPosts(reverseTimePosts);
-    // }
-  }, [display.time]);
+  }, [time]);
 
   if (isLoading || posts?.length === undefined) {
     return (
@@ -55,7 +56,7 @@ export const Tag = () => {
         setPosts={setPosts}
       />
 
-      <PostsLink posts={posts} display={display} />
+      <PostsLink posts={posts} format={format} />
     </div>
   );
 };

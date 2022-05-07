@@ -56,7 +56,7 @@ export const PostsLink = (props) => {
     [router]
   );
 
-  if (props.display.format === "grid") {
+  if (props.format === "grid") {
     return (
       <ul className="flex  justify-center p-5 dark:bg-neutral-900 dark:rounded-b-lg ">
         <SimpleGrid
@@ -154,7 +154,7 @@ export const PostsLink = (props) => {
       </ul>
     );
   }
-  if (props.display.format === "list") {
+  if (props.format === "list") {
     return (
       <ul className="flex  justify-center p-5 dark:bg-neutral-900 dark:rounded-b-lg ">
         <Stack justify="flex-start" spacing="sm">

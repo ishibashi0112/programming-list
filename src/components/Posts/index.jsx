@@ -14,8 +14,11 @@ export const Posts = () => {
   const { skeletonEl } = useCreateSkeletonEl(router.query.postsLength);
 
   const [posts, setPosts] = useState([]);
-  const [display] = useLocalStorage({
-    key: "display",
+  const [format] = useLocalStorage({
+    key: "format",
+  });
+  const [time] = useLocalStorage({
+    key: "time",
   });
 
   useEffect(() => {
@@ -23,12 +26,10 @@ export const Posts = () => {
   }, [data]);
 
   useEffect(() => {
-    // if (display.time === "up") {
     const copyArray = [...posts];
     const reverseTimePosts = copyArray.reverse();
     setPosts(reverseTimePosts);
-    // }
-  }, [display.time]);
+  }, [time]);
 
   if (isLoading || posts?.length === undefined) {
     return (
@@ -66,7 +67,7 @@ export const Posts = () => {
         setPosts={setPosts}
       />
 
-      <PostsLink posts={posts} display={display} />
+      <PostsLink posts={posts} format={format} />
     </div>
   );
 };
